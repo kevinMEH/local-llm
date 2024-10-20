@@ -1,0 +1,9 @@
+name: offline-test-helper
+channels:
+  - conda-forge
+  - pytorch
+dependencies:
+  - pytorch::pytorch
+  - conda-forge::transformers
+  - ca-certificates
+  - openssl

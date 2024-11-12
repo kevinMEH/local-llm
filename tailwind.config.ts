@@ -7,6 +7,9 @@ const config: Config = {
     ],
     theme: {
         colors: {
+            "transparent": "transparent",
+            "current": "currentColor",
+
             // Backgrounds
             "bg-light": "#132325",
             "bg-dark": "#0D1719",

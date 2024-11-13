@@ -7,27 +7,27 @@
 }
 
 .invert-scrollbar-color {
-    scrollbar-color: #0D1719 transparent;
+    scrollbar-color: #0d1719 transparent;
 }
 
 .ql-container {
-    height:100%;
-    position:relative
+    height: 100%;
+    position: relative;
 }
 
 .ql-editor {
-    height:100%;
-    outline:none;
-    overflow-y:auto;
-    white-space:pre-wrap;
-    word-wrap:break-word
+    height: 100%;
+    outline: none;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 .ql-editor > * {
-    cursor:text
+    cursor: text;
 }
 
 .ql-editor.ql-blank::before {
-    content:attr(data-placeholder);
-    pointer-events:none;
-    position:absolute;
+    content: attr(data-placeholder);
+    pointer-events: none;
+    position: absolute;
 }

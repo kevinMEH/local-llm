@@ -12,6 +12,7 @@ const config: Config = {
 
             // Backgrounds
             "bg-light": "#132325",
+            "bg-mid": "#101C1E",
             "bg-dark": "#0D1719",
 
             // Border

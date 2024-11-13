@@ -3,30 +3,16 @@ import BookIcon from "@/design/icons/BookIcon";
 import GithubIcon from "@/design/icons/GithubIcon";
 import PlusIcon from "@/design/icons/PlusIcon";
 import SettingsIcon from "@/design/icons/SettingsIcon";
+import type { Conversation } from "./page";
+import type { Dispatch } from "react";
 
-type Chat = {
-    title: string,
-    conversation: string[],
-    model: string,
-    selected: boolean
+type SidebarParameters = {
+    conversations: Conversation[],
+    activeConversation: Conversation | null,
+    setActiveConversation: Dispatch<Conversation>
 }
 
-const chats: Chat[] = [
-    {
-        title: "New conversation",
-        conversation: [],
-        model: "nvidia/Llama3-ChatQA-2-8B",
-        selected: true
-    },
-    {
-        title: "Python String Help",
-        conversation: [],
-        model: "nvidia/Llama3-ChatQA-2-8B",
-        selected: false
-    }
-]
-
-export default function Sidebar({}) {
+export default function Sidebar({ conversations, activeConversation, setActiveConversation }: SidebarParameters) {
     return <div className="max-w-60 basis-1/5 min-w-64 bg-bg-light flex flex-col p-3 gap-4 border-r border-highlight">
         <button className="px-4 py-3.5 rounded-md border-highlight border flex gap-2 items-center">
             <PlusIcon width={20} height={20} />
@@ -34,13 +20,15 @@ export default function Sidebar({}) {
         </button>
         <h2 className="ml-3 text-xs font-bold text-sub mt-1">CHAT HISTORY</h2>
         <div className="flex flex-1 flex-col gap-1 text-sm whitespace-nowrap">
-            { chats.map((chat, i) => <button
+            { conversations.map((conversation, i) => (
+            <button
                 key={i}
-                className={`px-5 py-4 ${chat.selected && "bg-bg-dark"} rounded-md flex gap-3 items-center`}
+                className={`px-5 py-4 ${conversation.id == activeConversation?.id ? "bg-bg-dark" : "hover:bg-bg-mid"} rounded-md flex gap-3 items-center`}
+                onClick={() => setActiveConversation(conversation)}
             >
                 <BookIcon width={18} height={18} className="flex-shrink-0" />
-                <p className="w-auto overflow-ellipsis overflow-hidden">{chat.title}</p>
-            </button>)}
+                <p className="w-auto overflow-ellipsis overflow-hidden">{conversation.title}</p>
+            </button>))}
         </div>
         <div className="border-t border-highlight mx-1" />
         <div className="px-3 pt-2 pb-3 flex flex-col gap-6 tracking-wide text-sm">

@@ -1,5 +1,6 @@
 "use client"
 import Sidebar from "./Sidebar";
+import Chat from "./Chat";
 import { useState } from "react";
 
 function generateId() {
@@ -45,5 +46,6 @@ export default function Page() {
     
     return <main className="w-full h-screen flex">
         <Sidebar conversations={conversations} activeConversation={activeConversation} setActiveConversation={setActiveConversation}  />
+        <Chat conversation={activeConversation} />
     </main>
 }

@@ -20,7 +20,8 @@ const config: Config = {
 
             // Text
             "main": "#E9F6EC",
-            "sub": "#97B699"
+            "sub": "#A1BFA3",
+            "quiet": "#526659"
         },
         fontFamily: {
             "inter": ["var(--font-inter)"]

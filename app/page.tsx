@@ -3,15 +3,6 @@ import Sidebar from "./Sidebar";
 import Chat from "./Chat";
 import { useState } from "react";
 
-function generateId() {
-    const characters = "0123456789abcdef";
-    let string = "";
-    for(let i = 0; i < 16; i++) {
-        string += characters[Math.floor(Math.random() * 16)];
-    }
-    return string;
-}
-
 export type Conversation = {
     id: string,
     title: string,
@@ -46,6 +37,6 @@ export default function Page() {
     
     return <main className="w-full h-screen flex">
         <Sidebar conversations={conversations} activeConversation={activeConversation} setActiveConversation={setActiveConversation}  />
-        <Chat conversation={activeConversation} />
+        <Chat activeConversation={activeConversation} />
     </main>
 }

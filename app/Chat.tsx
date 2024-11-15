@@ -8,10 +8,10 @@ import { Conversation } from "./page";
 const Editor = dynamic(() => import("./Editor"), { ssr: false });
 
 type ChatParameters = {
-    conversation: Conversation | null
+    activeConversation: Conversation | null
 }
 
-export default function Chat({ conversation }: ChatParameters) {
+export default function Chat({ activeConversation }: ChatParameters) {
     const quillRef = useRef(null as null | Quill);
     
     return <div className="w-full h-full flex-1 overflow-auto flex flex-col justify-between items-center gap-8">

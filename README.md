@@ -1,1 +1,1 @@
-# offline-llm
+# local-llm

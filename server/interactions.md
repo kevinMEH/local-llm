@@ -1,6 +1,6 @@
 # Interactions
 
-Main process spawns routes process and controller process. Creates command queue and global streaming queue for IPC between two child processes.
+Main process spawns routes process, and starts processing commands. Creates command queue and global streaming queue for IPC between self and routes process.
 - `routes.py`
 - `controller.py`
 
@@ -12,8 +12,8 @@ Spawns thread to process global streaming queue into local streaming queue. Glob
 
 - Uses `database.py`
 
-## Controller Process
+## Controller Process (Main)
 
-Controller processes commands and spawns child processes that will generate output into global streaming queue.
+Processes commands and spawns child processes that will generate output into global streaming queue.
 
 - Uses model templates in model folder

@@ -37,6 +37,18 @@ def get_body() -> Tuple[None | Dict[str, Any], int]:
 
 app = Flask(__name__)
 
+@app.route("/new_chat", methods=[ "POST" ])
+def new_chat():
+    data, status_code = get_body()
+    if(data == None):
+        return Response(None, status_code)
+    title = data.get("title")
+    model_id = data.get("model_id")
+    if(not isinstance(title, str) or not isinstance(model_id, str)):
+        return Response(None, 400)
+    conversation = new_conversation(title, model_id)
+    return conversation
+
 @app.route("/chat", methods=[ "POST" ])
 def chat():
     data, status_code = get_body()

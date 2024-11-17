@@ -1,14 +1,11 @@
 from random import random
-from typing import Dict, List
+from typing import Dict, List, TypedDict
 
-class Conversation:
+class Conversation(TypedDict):
+    id: str
     title: str
+    model_id: str
     messages: List[str]
-    model: str
-    def __init__(self, title: str, model: str):
-        self.title = title
-        self.messages = []
-        self.model = model
 
 database: Dict[str, Conversation] = dict()
 
@@ -27,7 +24,7 @@ def get_conversation(id: str) -> Conversation | None:
 def delta_response(id: str, delta: str):
     conversation = database.get(id)
     if(conversation != None):
-        last_message = conversation.messages[-1]
-        conversation.messages[-1] = last_message + delta
+        last_message = conversation["messages"][-1]
+        conversation["messages"][-1] = last_message + delta
     else:
         print(f"ERROR: deltaResponse called with nonexistant conversation: {id}")

@@ -1,20 +1,18 @@
 from time import sleep
 from flask import Flask, Response, request
-from typing import TYPE_CHECKING, Any, Dict, List, Tuple
+from typing import Any, Dict, Tuple
 from queue import Queue as SingleQueue
 from multiprocessing import Queue as MultiQueue
-from database import get_conversation, delta_response
+from database import new_conversation, get_conversation, delta_response
+from Command import Command, create_command
 
-if(TYPE_CHECKING):
-    from main import Command
-
-command_queue: MultiQueue[Tuple[Command, List[str]]]
-def set_command_queue(new_queue: MultiQueue[Tuple[Command, List[str]]]):
+command_queue: "MultiQueue[Command]"
+def set_command_queue(new_queue: "MultiQueue[Command]"):
     global command_queue
     command_queue = new_queue
 
-global_streaming_queue: MultiQueue[Tuple[str, str | None]]
-def set_global_streaming_queue(new_queue: MultiQueue[Tuple[str, str | None]]):
+global_streaming_queue: "MultiQueue[Tuple[str, str | None]]"
+def set_global_streaming_queue(new_queue: "MultiQueue[Tuple[str, str | None]]"):
     global global_streaming_queue
     global_streaming_queue = new_queue
 
@@ -40,7 +38,7 @@ def get_body() -> Tuple[None | Dict[str, Any], int]:
 app = Flask(__name__)
 
 @app.route("/chat", methods=[ "POST" ])
-def ask():
+def chat():
     data, status_code = get_body()
     if(data == None):
         return Response(None, status_code)
@@ -52,13 +50,13 @@ def ask():
     if(conversation == None):
         return Response(None, 400)
     
-    conversation.messages.append(message) # User message
-    conversation.messages.append("") # Assitant message
+    conversation["messages"].append(message) # User message
+    conversation["messages"].append("") # Assitant message
     local_streaming_queue: SingleQueue[str | None] = SingleQueue()
     local_streaming_queue_map[id] = local_streaming_queue
-    command_queue.put( ("completion", conversation.messages) )
+    command_queue.put(create_command("completion", conversation["id"], conversation["model_id"], conversation["messages"][:-1].copy()))
 
-    def eventStream():
+    def event_stream():
         done = False
         while(not done):
             delta = ""
@@ -77,4 +75,4 @@ def ask():
             sleep(0.5)
         del local_streaming_queue_map[id]
 
-    return Response(eventStream(), mimetype="text/event-stream")
+    return Response(event_stream(), mimetype="text/event-stream")

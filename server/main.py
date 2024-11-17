@@ -2,7 +2,7 @@ from multiprocessing import Process, Queue as MultiQueue
 from routes import app
 from routes import set_command_queue
 from routes import set_streaming_queue
-from controller import process_commands
+from processor import process_commands
 from Command import Command
 
 def start_server(

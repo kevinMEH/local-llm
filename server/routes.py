@@ -11,20 +11,10 @@ def set_command_queue(new_queue: "MultiQueue[Command]"):
     global command_queue
     command_queue = new_queue
 
-global_streaming_queue: "MultiQueue[Tuple[str, str | None]]"
-def set_global_streaming_queue(new_queue: "MultiQueue[Tuple[str, str | None]]"):
-    global global_streaming_queue
-    global_streaming_queue = new_queue
-
-local_streaming_queue_map: Dict[str, SingleQueue[str | None]] = dict()
-def start_streaming_processor():
-    while(True):
-        (id, delta) = global_streaming_queue.get(True, None)
-        local_streaming_queue = local_streaming_queue_map.get(id)
-        if(local_streaming_queue != None):
-            local_streaming_queue.put(delta)
-        else:
-            print(f"Error: Local streaming queue does not exist for id {id}")
+streaming_queue: "MultiQueue[str | None]"
+def set_streaming_queue(new_queue: "MultiQueue[str | None]"):
+    global streaming_queue
+    streaming_queue = new_queue
 
 def get_body() -> Tuple[None | Dict[str, Any], int]:
     data = request.get_json(silent=True)
@@ -46,8 +36,7 @@ def new_chat():
     model_id = data.get("model_id")
     if(not isinstance(title, str) or not isinstance(model_id, str)):
         return Response(None, 400)
-    conversation = new_conversation(title, model_id)
-    return conversation
+    return new_conversation(title, model_id)
 
 @app.route("/chat", methods=[ "POST" ])
 def chat():
@@ -64,17 +53,15 @@ def chat():
     
     conversation["messages"].append(message) # User message
     conversation["messages"].append("") # Assitant message
-    local_streaming_queue: SingleQueue[str | None] = SingleQueue()
-    local_streaming_queue_map[id] = local_streaming_queue
-    command_queue.put(create_command("completion", conversation["id"], conversation["model_id"], conversation["messages"][:-1].copy()))
+    command_queue.put(create_command("completion", conversation["model_id"], conversation["messages"][:-1].copy()))
 
     def event_stream():
         done = False
         while(not done):
             delta = ""
-            while(local_streaming_queue.not_empty):
+            while(not streaming_queue.empty()):
                 try:
-                    fragment = local_streaming_queue.get(False)
+                    fragment = streaming_queue.get(False)
                     if(fragment != None):
                         delta += fragment
                     else:
@@ -85,6 +72,5 @@ def chat():
                 delta_response(id, delta)
                 yield f"event: delta\ndata: {delta}\n\n"
             sleep(0.5)
-        del local_streaming_queue_map[id]
 
     return Response(event_stream(), mimetype="text/event-stream")

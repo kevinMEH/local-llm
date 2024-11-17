@@ -18,6 +18,17 @@ def random_id(length: int) -> str:
         result += characters[int(random() * 16)]
     return result
 
+def new_conversation(title: str, model_id: str) -> Conversation:
+    id = random_id(16)
+    conversation: Conversation = {
+        "id": id,
+        "title": title,
+        "model_id": model_id,
+        "messages": []
+    }
+    database[id] = conversation
+    return conversation
+
 def get_conversation(id: str) -> Conversation | None:
     return database.get(id)
 

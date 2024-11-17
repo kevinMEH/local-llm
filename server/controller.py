@@ -5,6 +5,7 @@ from typing import Tuple
 from models.text_generation_pipeline import get_streamer, generate
 from Command import Command
 
+# As of right now, children are responsible for loading model
 def generate_to_queue(global_streaming_queue: "MultiQueue[Tuple[str, str | None]]", command: Command):
     id = command["id"]
     model_id = command["model_id"]
@@ -27,4 +28,4 @@ def start_commands_processor(
         if(instruction == "completion"):
             generation = Process(target=generate_to_queue, args=(global_streaming_queue, command))
             generation.start()
-            generation.join()
+            generation.join() # NOTE: As of right now, only one generation at a time

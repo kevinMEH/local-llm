@@ -30,8 +30,6 @@ export async function addMessage(id: string, message: string) {
     const conversation = database.get(id);
     if(conversation !== undefined) {
         conversation.messages.push(message);
-        console.log("ADDED MESSAGE: " + message);
     } else {
-        console.log("COULD NOT ADD MESSAGE: " + message);
     }
 }

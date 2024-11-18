@@ -12,7 +12,6 @@ export default function Page() {
     
     async function refreshConversations() {
         setConversations(await getAllConversations());
-        console.log("REFRESHED");
     }
     
     useEffect(() => {

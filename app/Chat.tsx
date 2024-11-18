@@ -40,7 +40,6 @@ export default function Chat({ conversations, refreshConversations, activeConver
     }
     
     const onSubmit = useCallback(async () => {
-        console.log(title);
         const message = quillRef.current?.getText().trim();
         if(message === undefined) {
             console.error("Error: Attempting to send undefined as message.");
@@ -50,7 +49,6 @@ export default function Chat({ conversations, refreshConversations, activeConver
         let currentConversation;
         if(!activeConversation) {
             currentConversation = await createConversation(title, model);
-            console.log(title);
             setActiveConversationId(currentConversation.id);
         } else {
             currentConversation = activeConversation;
@@ -78,7 +76,6 @@ export default function Chat({ conversations, refreshConversations, activeConver
         setModel(activeConversation?.model_id || "meta-llama/Llama-3.2-3B-Instruct")
         onSubmitRef.current = onSubmit;
     }, [conversations, activeConversationId, activeConversation?.title, activeConversation?.model_id, onSubmit]);
-
     
     const scrollContainerRef = useRef(null as null | HTMLDivElement);
     useEffect(() => {

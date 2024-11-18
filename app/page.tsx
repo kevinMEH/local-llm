@@ -1,42 +1,33 @@
 "use client"
+
+import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import Chat from "./Chat";
-import { useState } from "react";
-
-export type Conversation = {
-    id: string,
-    title: string,
-    messages: string[],
-    model: string
-}
+import { getAllConversations } from "./api/conversations";
+import type { Conversation } from "./api/database";
 
 export default function Page() {
-    const [conversations, setConversations] = useState<Conversation[]>([
-        {
-            id: "9e027eae43cfb26a",
-            title: "New conversation",
-            messages: [
-                "I am asking you a question, LLM. Please answer my question.",
-                "Sure, here is your answer: asdfkakbkakbkakb",
-                "Thank you for your answer.",
-                "No problem"
-            ],
-            model: "nvidia/Llama3-ChatQA-2-8B"
-        },
-        {
-            id: "29db46cb8ff79bf0",
-            title: "Python String Help",
-            messages: [
-                "Please generate a function which will count the number of characters in a string",
-                "Here is the function you requested:\ndef countCharacters(string, character):\n\treturn 5"
-            ],
-            model: "nvidia/Llama3-ChatQA-2-8B"
-        }
-    ]);
-    const [ activeConversation, setActiveConversation ] = useState<Conversation | null>(null);
+    const [ activeConversationId, setActiveConversationId ] = useState<string | null>(null);
+    const [ conversations, setConversations ] = useState<Conversation[]>([]);
+    
+    async function refreshConversations() {
+        setConversations(await getAllConversations());
+        console.log("REFRESHED");
+    }
+    
+    useEffect(() => {
+        (async () => {
+            refreshConversations();
+        })();
+    }, []);
     
     return <main className="w-full h-screen flex">
-        <Sidebar conversations={conversations} activeConversation={activeConversation} setActiveConversation={setActiveConversation}  />
-        <Chat activeConversation={activeConversation} />
+        <Sidebar conversations={conversations} activeConversationId={activeConversationId} setActiveConversationId={setActiveConversationId}  />
+        <Chat
+            conversations={conversations}
+            refreshConversations={refreshConversations}
+            activeConversationId={activeConversationId}
+            setActiveConversationId={setActiveConversationId}
+        />
     </main>
 }

@@ -4,17 +4,17 @@ import torch
 def get_formatted_input(messages, context: str | None):
     system = "System: This is a chat between a user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions based on the context. The assistant should also indicate when the answer cannot be found in the context."
     instruction = "Please give a full and complete answer for the question."
-
-    for item in messages:
-        if item['role'] == "user":
-            ## only apply this instruction for the first user turn
-            item['content'] = instruction + " " + item['content']
-            break
+    
+    first_instruction = True
     
     parts = []
     for item in messages:
         if(item["role"] == "user"):
-            parts.append("User: " + item["content"])
+            if(first_instruction):
+                parts.append("User: " + instruction + " " + item["content"])
+                first_instruction = False
+            else:
+                parts.append("User: " + item["content"])
         else:
             parts.append("Assistant: " + item["content"])
     conversation = '\n\n'.join(parts) + "\n\nAssistant:"

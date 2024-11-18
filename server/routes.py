@@ -1,9 +1,8 @@
+import json
 from time import sleep
 from flask import Flask, Response, request
 from typing import Any, Dict, Tuple
-from queue import Queue as SingleQueue
 from multiprocessing import Queue as MultiQueue
-from database import new_conversation, get_conversation, delta_response
 from Command import Command, create_command
 
 command_queue: "MultiQueue[Command]"
@@ -24,37 +23,25 @@ def get_body() -> Tuple[None | Dict[str, Any], int]:
         return (None, 400)
     return (data, 200)
 
-
 app = Flask(__name__)
 
-@app.route("/new_chat", methods=[ "POST" ])
-def new_chat():
+# https://platform.openai.com/docs/api-reference/chat/create
+@app.route("/chat/completions", methods=[ "POST" ])
+def completions():
     data, status_code = get_body()
     if(data == None):
         return Response(None, status_code)
-    title = data.get("title")
-    model_id = data.get("model_id")
-    if(not isinstance(title, str) or not isinstance(model_id, str)):
+    model = data.get("model")
+    messages = data.get("messages")
+    if(not isinstance(messages, list) or not isinstance(model, str)):
         return Response(None, 400)
-    return new_conversation(title, model_id)
+    try:
+        messages = [ str(message) for message in messages ]
+    except:
+        return Response(None, 400)
 
-@app.route("/chat", methods=[ "POST" ])
-def chat():
-    data, status_code = get_body()
-    if(data == None):
-        return Response(None, status_code)
-    id = data.get("id")
-    message = data.get("message")
-    if(not isinstance(id, str) or not isinstance(message, str)):
-        return Response(None, 400)
-    conversation = get_conversation(id)
-    if(conversation == None):
-        return Response(None, 400)
+    command_queue.put(create_command("completion", model, messages))
     
-    conversation["messages"].append(message) # User message
-    conversation["messages"].append("") # Assitant message
-    command_queue.put(create_command("completion", conversation["model_id"], conversation["messages"][:-1].copy()))
-
     def event_stream():
         done = False
         while(not done):
@@ -69,8 +56,10 @@ def chat():
                 except:
                     break
             if(delta != ""):
-                delta_response(id, delta)
-                yield f"event: delta\ndata: {delta}\n\n"
-            sleep(0.5)
-
+                result = dict()
+                result["v"] = delta
+                yield f"event: delta\ndata: {json.dumps(result)}\n\n"
+            sleep(0.05)
+        yield "data: [DONE]\n\n"
+    
     return Response(event_stream(), mimetype="text/event-stream")

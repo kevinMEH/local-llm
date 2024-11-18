@@ -39,6 +39,11 @@ export default function Chat({ conversations, refreshConversations, activeConver
         }
     }
     
+    useEffect(() => {
+        setTitle(activeConversation?.title || "");
+        setModel(activeConversation?.model_id || "meta-llama/Llama-3.2-3B-Instruct")
+    }, [activeConversation?.model_id, activeConversation?.title])
+    
     const onSubmit = useCallback(async () => {
         const message = quillRef.current?.getText().trim();
         if(message === undefined) {
@@ -72,10 +77,8 @@ export default function Chat({ conversations, refreshConversations, activeConver
     
     const onSubmitRef = useRef(onSubmit);
     useEffect(() => {
-        setTitle(activeConversation?.title || "");
-        setModel(activeConversation?.model_id || "meta-llama/Llama-3.2-3B-Instruct")
         onSubmitRef.current = onSubmit;
-    }, [conversations, activeConversationId, activeConversation?.title, activeConversation?.model_id, onSubmit]);
+    }, [onSubmit]);
     
     const scrollContainerRef = useRef(null as null | HTMLDivElement);
     useEffect(() => {

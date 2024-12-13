@@ -22,13 +22,16 @@ declare global {
     var database: Map<string, Conversation>;
 }
 
+// eslint-disable-next-line no-var
+export var database: Map<string, Conversation>;
+
 if(process.env.NODE_ENV !== "production") {
     if(!global.database) {
         global.database = new Map<string, Conversation>();
     }
     database = global.database;
 } else {
-    database = global.database;
+    database = new Map<string, Conversation>();
 }
 
 export function getConversation(id: string): Conversation | undefined {

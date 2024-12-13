@@ -1,6 +1,6 @@
 "use server";
 
-import { Conversation, randomId } from "./database";
+import { Conversation, randomId, database } from "./database";
 
 export async function createConversation(title: string, model_id: string): Promise<Conversation> {
     let id = randomId(16);

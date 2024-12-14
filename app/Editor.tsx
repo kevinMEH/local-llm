@@ -46,7 +46,7 @@ const Editor = forwardRef(function Editor({ className, onSubmitRef }: EditorPara
             (ref as MutableRefObject<Quill | null>).current = null;
             container.innerHTML = ``;
         };
-    }, [ ref ]);
+    }, [ ref, onSubmitRef ]);
 
     return <div className={className} ref={containerRef}></div>
 });

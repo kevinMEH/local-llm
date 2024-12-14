@@ -10,7 +10,7 @@ export function randomId(length: number) {
     return result;
 }
 
-export type Conversation = {
+export type BackendConversation = {
     id: string,
     title: string,
     model_id: string,
@@ -19,21 +19,21 @@ export type Conversation = {
 
 declare global {
     // eslint-disable-next-line no-var
-    var database: Map<string, Conversation>;
+    var database: Map<string, BackendConversation>;
 }
 
 // eslint-disable-next-line no-var
-export var database: Map<string, Conversation>;
+export var database: Map<string, BackendConversation>;
 
 if(process.env.NODE_ENV !== "production") {
     if(!global.database) {
-        global.database = new Map<string, Conversation>();
+        global.database = new Map<string, BackendConversation>();
     }
     database = global.database;
 } else {
-    database = new Map<string, Conversation>();
+    database = new Map<string, BackendConversation>();
 }
 
-export function getConversation(id: string): Conversation | undefined {
+export function getConversation(id: string): BackendConversation | undefined {
     return database.get(id);
 }

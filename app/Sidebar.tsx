@@ -4,10 +4,10 @@ import BookIcon from "@/design/icons/BookIcon";
 import GithubIcon from "@/design/icons/GithubIcon";
 import PlusIcon from "@/design/icons/PlusIcon";
 import SettingsIcon from "@/design/icons/SettingsIcon";
-import type { Conversation } from "./api/database";
+import type { BackendConversation } from "./api/database";
 
 type SidebarParameters = {
-    conversations: Conversation[],
+    conversations: BackendConversation[],
     activeConversationId: string | null,
     setActiveConversationId: Dispatch<string | null>
 }

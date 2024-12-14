@@ -3,7 +3,7 @@ from time import sleep
 from flask import Flask, Response, request
 from typing import Any, Dict, Tuple
 from multiprocessing import Queue as MultiQueue
-from Command import Command, create_command
+from .Command import Command, create_command
 
 command_queue: "MultiQueue[Command]"
 def set_command_queue(new_queue: "MultiQueue[Command]"):

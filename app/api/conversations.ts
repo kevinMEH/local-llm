@@ -1,13 +1,13 @@
 "use server";
 
-import { Conversation, randomId, database } from "./database";
+import { BackendConversation, randomId, database } from "./database";
 
-export async function createConversation(title: string, model_id: string): Promise<Conversation> {
+export async function createConversation(title: string, model_id: string): Promise<BackendConversation> {
     let id = randomId(16);
     while(database.has(id)) {
         id = randomId(16);
     }
-    const conversation: Conversation = {
+    const conversation: BackendConversation = {
         id, title, model_id,
         messages: []
     };
@@ -15,7 +15,7 @@ export async function createConversation(title: string, model_id: string): Promi
     return conversation;
 }
 
-export async function getAllConversations(): Promise<Conversation[]> {
+export async function getAllConversations(): Promise<BackendConversation[]> {
     return [...database.values()];
 }
 

@@ -26,7 +26,7 @@ if(process.argv.includes("--dev")) {
         stdio: "inherit"
     });
 } else {
-    if(!existsSync("./.next/BUILD_ID") || process.argv.includes("--build")) {
+    if(false == existsSync("./.next/BUILD_ID") || process.argv.includes("--build")) {
         console.log("Compiling...");
         await spawnPromise("npm", ["run", "build"], {
             stdio: "inherit"

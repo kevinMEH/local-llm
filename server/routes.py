@@ -1,9 +1,8 @@
 import json
 from time import sleep
-from flask import Blueprint, Response, request
-from typing import Any, Dict, Tuple
+from flask import Blueprint, Response
 from multiprocessing import Queue as MultiQueue
-from .Command import Command, create_command
+from server.helper import get_body, Command, create_command
 
 command_queue: "MultiQueue[Command]"
 def set_command_queue(new_queue: "MultiQueue[Command]"):
@@ -14,14 +13,6 @@ streaming_queue: "MultiQueue[str | None]"
 def set_streaming_queue(new_queue: "MultiQueue[str | None]"):
     global streaming_queue
     streaming_queue = new_queue
-
-def get_body() -> Tuple[None | Dict[str, Any], int]:
-    data = request.get_json(silent=True)
-    if(data == None):
-        return (None, 415)
-    if(not isinstance(data, dict)):
-        return (None, 400)
-    return (data, 200)
 
 
 routes_blueprint = Blueprint("routes", __name__)

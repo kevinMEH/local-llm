@@ -6,7 +6,7 @@ from server.routes import routes_blueprint
 from server.routes import set_command_queue
 from server.routes import set_streaming_queue
 from server.processor import process_commands
-from server.Command import Command
+from server.helper import Command
 
 def start_server(
     command_queue: "MultiQueue[Command]",

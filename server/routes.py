@@ -1,6 +1,6 @@
 import json
 from time import sleep
-from flask import Flask, Response, request
+from flask import Blueprint, Response, request
 from typing import Any, Dict, Tuple
 from multiprocessing import Queue as MultiQueue
 from .Command import Command, create_command
@@ -23,10 +23,11 @@ def get_body() -> Tuple[None | Dict[str, Any], int]:
         return (None, 400)
     return (data, 200)
 
-app = Flask(__name__)
+
+routes_blueprint = Blueprint("routes", __name__)
 
 # https://platform.openai.com/docs/api-reference/chat/create
-@app.route("/chat/completions", methods=[ "POST" ])
+@routes_blueprint.route("/chat/completions", methods=[ "POST" ])
 def completions():
     data, status_code = get_body()
     if(data == None):

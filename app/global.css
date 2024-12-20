@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    a {
+        @apply text-link;
+    }
+}
+
 * {
     scrollbar-color: #132325 transparent;
 }

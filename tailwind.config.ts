@@ -24,7 +24,8 @@ const config: Config = {
             "quiet": "#526659"
         },
         fontFamily: {
-            "inter": ["var(--font-inter)"]
+            "inter": ["var(--font-inter)"],
+            "mono": ["var(--font-mono)"]
         }
     },
     plugins: [],

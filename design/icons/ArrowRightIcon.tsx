@@ -4,6 +4,9 @@ type Parameters = {
     className?: string;
 };
 
+/**
+ * Box 14 x 24
+ */
 function ArrowRightIcon({ width, height, className }: Parameters) {
     return (
         <svg
@@ -14,12 +17,12 @@ function ArrowRightIcon({ width, height, className }: Parameters) {
             stroke="currentColor"
             strokeLinecap="round"
             strokeLinejoin="round"
-            viewBox="0 0 24 24"
+            viewBox="0 0 14 24"
             strokeWidth={2}
             className={className}
         >
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
+            <line x1="0" y1="12" x2="14" y2="12"></line>
+            <polyline points="7 5 14 12 7 19"></polyline>
         </svg>
     );
 }

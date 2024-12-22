@@ -1,7 +1,7 @@
 # Accepts commands and dispatches to models
 from multiprocessing import Queue as MultiQueue
 from threading import Thread
-from server.helper import Command
+from server.types.Command import Command
 from server.pipelines.text_generation_pipeline import load_model, unload_model, generate_and_cleanup
 
 def process_commands(

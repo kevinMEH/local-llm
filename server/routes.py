@@ -2,7 +2,8 @@ import json
 from time import sleep
 from flask import Blueprint, Response
 from multiprocessing import Queue as MultiQueue
-from server.helper import get_body, Command, create_command, get_field, get_list_field
+from server.helper import get_body, get_field, get_list_field
+from server.types.Command import Command, create_command
 
 command_queue: "MultiQueue[Command]"
 def set_command_queue(new_queue: "MultiQueue[Command]"):

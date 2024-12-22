@@ -6,7 +6,7 @@ from server.helper import helper_blueprint
 from server.routes import routes_blueprint, set_command_queue, set_streaming_queue
 from server.welcome import welcome_blueprint
 from server.processor import process_commands
-from server.helper import Command
+from server.types.Command import Command
 
 def start_server(
     command_queue: "MultiQueue[Command]",

@@ -2,7 +2,7 @@
 from multiprocessing import Queue as MultiQueue
 from threading import Thread
 from server.helper import Command
-from server.models.text_generation_pipeline import load_model, unload_model, generate_and_cleanup
+from server.pipelines.text_generation_pipeline import load_model, unload_model, generate_and_cleanup
 
 def process_commands(
     command_queue: "MultiQueue[Command]",

@@ -1,6 +1,6 @@
 import huggingface_hub
-from flask import Blueprint, Response
-from server.helper import get_body
+from flask import Blueprint
+from server.helper import get_body, get_field
 
 
 welcome_blueprint = Blueprint("welcome", __name__)
@@ -9,12 +9,8 @@ welcome_blueprint = Blueprint("welcome", __name__)
 def login():
     response = dict()
     try:
-        data, status_code = get_body()
-        if(data == None):
-            return Response(None, status_code)
-        token = data.get("token")
-        if(not isinstance(token, str)):
-            return Response(None, 400)
+        data = get_body()
+        token = get_field(data, "token", str)
         huggingface_hub.login(token)
         response["success"] = True
     except:

@@ -2,7 +2,7 @@ import json
 from time import sleep
 from flask import Blueprint, Response
 from multiprocessing import Queue as MultiQueue
-from server.helper import get_body, Command, create_command
+from server.helper import get_body, Command, create_command, get_field, get_list_field
 
 command_queue: "MultiQueue[Command]"
 def set_command_queue(new_queue: "MultiQueue[Command]"):
@@ -20,17 +20,9 @@ routes_blueprint = Blueprint("routes", __name__)
 # https://platform.openai.com/docs/api-reference/chat/create
 @routes_blueprint.route("/chat/completions", methods=[ "POST" ])
 def completions():
-    data, status_code = get_body()
-    if(data == None):
-        return Response(None, status_code)
-    model = data.get("model")
-    messages = data.get("messages")
-    if(not isinstance(messages, list) or not isinstance(model, str)):
-        return Response(None, 400)
-    try:
-        messages = [ str(message) for message in messages ]
-    except:
-        return Response(None, 400)
+    data = get_body()
+    model = get_field(data, "model", str)
+    messages = get_list_field(data, "messages", str)
 
     command_queue.put(create_command("completion", model, messages))
     

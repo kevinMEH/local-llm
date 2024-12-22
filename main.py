@@ -2,6 +2,7 @@ from sys import argv
 from multiprocessing import Process, Queue as MultiQueue
 from flask import Flask
 from waitress import serve
+from server.helper import helper_blueprint
 from server.routes import routes_blueprint, set_command_queue, set_streaming_queue
 from server.welcome import welcome_blueprint
 from server.processor import process_commands
@@ -14,6 +15,7 @@ def start_server(
     set_command_queue(command_queue)
     set_streaming_queue(global_streaming_queue)
     app = Flask(__name__)
+    app.register_blueprint(helper_blueprint)
     app.register_blueprint(routes_blueprint)
     app.register_blueprint(welcome_blueprint)
     if("--production" in argv):

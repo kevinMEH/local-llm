@@ -5,6 +5,7 @@ from waitress import serve
 from server.helper import helper_blueprint
 from server.routes import routes_blueprint, set_command_queue, set_streaming_queue
 from server.welcome import welcome_blueprint
+from server.models import models_blueprint
 from server.processor import process_commands
 from server.types.Command import Command
 
@@ -18,6 +19,7 @@ def start_server(
     app.register_blueprint(helper_blueprint)
     app.register_blueprint(routes_blueprint)
     app.register_blueprint(welcome_blueprint)
+    app.register_blueprint(models_blueprint)
     if("--production" in argv):
         serve(app, port=2778)
     else:

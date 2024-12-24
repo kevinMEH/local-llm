@@ -65,3 +65,30 @@ def delete_revisions():
     response["success"] = True
     return response
 
+@models_blueprint.route("/models/download_model", methods=[ "POST" ])
+def basic_download_model():
+    data = get_body()
+    repository = get_field(data, "repository", str)
+    
+    def event_stream():
+        error = [ False ]
+
+        def snapshot_download_wrapper(repository: str, error: List[bool]):
+            try: snapshot_download(repository)
+            except Exception as exception:
+                error[0] = True
+                raise exception
+
+        thread = Thread(target=snapshot_download_wrapper, args=[repository, error])
+        thread.start()
+        while(thread.is_alive()):
+            yield f"event: downloading\n\n"
+            sleep(0.5)
+        thread.join()
+        if(error[0]):
+            yield f"event: error\n\n"
+        else:
+            yield f"event: finish\n\n"
+
+    return Response(event_stream(), mimetype="text/event-stream")
+

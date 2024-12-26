@@ -28,3 +28,9 @@ def logged_in():
         response["success"] = False
     finally:
         return response
+
+@welcome_blueprint.route("/welcome/get_token", methods=[ "POST" ])
+def get_token():
+    response = dict()
+    response["token"] = huggingface_hub.get_token()
+    return response

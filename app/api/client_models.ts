@@ -33,7 +33,7 @@ async function* _listModels(
         filter = undefined,
         limit = 50,
     }: ListModelsParameters,
-    hardLimit: number
+    hardLimit: number = 500
 ): AsyncGenerator<ModelEntry, undefined> {
     const parameters = new URLSearchParams();
     if (search) parameters.append("search", search);
@@ -78,11 +78,8 @@ type InfiniteAsyncGenerator<T, TReturn = unknown> = {
  * Wrapper for _listModels which forces the user to call next() to process the
  * generator.
  */
-export async function* listModels(
-    parameters: ListModelsParameters = {},
-    hardLimit = 500
-): InfiniteAsyncGenerator<ModelEntry, undefined> {
-    yield* _listModels(parameters, hardLimit);
+export async function* listModels(parameters: ListModelsParameters = {}): InfiniteAsyncGenerator<ModelEntry, undefined> {
+    yield* _listModels(parameters, Infinity);
     return;
 }
 

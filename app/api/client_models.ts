@@ -83,6 +83,20 @@ export async function* listModels(parameters: ListModelsParameters = {}): Infini
     return;
 }
 
+export async function getGeneratorBatch<T>(generator: InfiniteAsyncGenerator<T>, batchSize: number): Promise<T[]> {
+    // Cannot use Promise<T>[] and Promise.all because async generators force await on yield.
+    const values: T[] = [];
+    for(let i = 0; i < batchSize; i++) {
+        const { done, value } = await generator.next();
+        if(!done) {
+            values.push(value);
+        } else {
+            return values;
+        }
+    }
+    return values;
+}
+
 export type ModelInformation = {
     id: string;
     // modelId: string; // Same as id

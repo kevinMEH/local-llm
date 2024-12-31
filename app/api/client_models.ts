@@ -70,7 +70,7 @@ async function* _listModels(
  * Calling a for of loop on an infinite generator will effectively put the
  * program inside an infinite loop!!!
  */
-type InfiniteAsyncGenerator<T, TReturn = unknown> = {
+export type InfiniteAsyncGenerator<T, TReturn = unknown> = {
     next(): Promise<IteratorResult<T, TReturn>>;
 };
 

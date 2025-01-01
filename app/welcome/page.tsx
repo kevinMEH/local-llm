@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { getSettings } from "../api/settings";
@@ -11,6 +11,7 @@ export default function Page() {
     const slideCount = 2;
     const [ loadingCount, setLoadingCount ] = useState(slideCount);
     const [ activeIndex, setActiveIndex ] = useState(0);
+    const [ unloadLoadingPage, setUnloadLoadingPage ] = useState(false);
     const router = useRouter();
     
     useEffect(() => {
@@ -55,19 +56,25 @@ export default function Page() {
         >
             { slides }
         </SlideDisplay>
-        <Loading loading={loading} />
+        { !unloadLoadingPage && <Loading loading={loading} setUnloadLoadingPage={setUnloadLoadingPage} /> }
     </main>
 }
 
-function Loading({ loading }: { loading: boolean }) {
+function Loading({ loading, setUnloadLoadingPage }: { loading: boolean, setUnloadLoadingPage: Dispatch<SetStateAction<boolean>> }) {
     const [ dots, setDots ] = useState("...");
 
     useEffect(() => {
         const interval = setInterval(() => {
             setDots(dots => ".".repeat((dots.length + 1) % 4));
         }, 500);
-        return (() => clearInterval(interval));
+        return () => clearInterval(interval);
     }, []);
+    
+    useEffect(() => {
+        if(!loading) {
+            setTimeout(() => setUnloadLoadingPage(true), 1000);
+        }
+    }, [ loading, setUnloadLoadingPage ])
 
     return <div
         className={`absolute left-0 right-0 top-0 bottom-0 pb-12 bg-bg-dark z-10

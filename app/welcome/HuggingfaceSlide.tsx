@@ -51,8 +51,8 @@ export default function HuggingfaceSlide({ active, widthTailwindClass, setActive
                     <div className="space-y-4">
                         <h2 className="text-xl font-semibold text-main">Retrieving Your Access Token:</h2>
                         <ol className="list-decimal list-inside space-y-1">
-                            <li>Visit <Link href="https://huggingface.co/">Huggingface.co</Link> and log in to your account.</li>
-                            <li>Go to your account settings and havigate to the <Link href="https://huggingface.co/settings/tokens">Access Tokens section.</Link></li>
+                            <li>Visit <Link href="https://huggingface.co/" target="_blank">Huggingface.co</Link> and log in to your account.</li>
+                            <li>Go to your account settings and havigate to the <Link href="https://huggingface.co/settings/tokens" target="_blank">Access Tokens section.</Link></li>
                             <li>Create a new token (or use an existing one) and enter it below.</li>
                         </ol>
                     </div>

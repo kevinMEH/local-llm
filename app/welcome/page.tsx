@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { getSettings } from "../api/settings";
@@ -27,8 +27,6 @@ export default function Page() {
     }, [router]);
 
     const widthTailwindClass = "w-[48rem]";
-    const gapTailwindClass = "gap-[12rem]";
-    const transformWidthRem = 60;
     
     const slides: React.ReactNode[] = [
         <WelcomeSlide key={0}
@@ -51,12 +49,9 @@ export default function Page() {
     
     const loading = loadingCount > 0;
 
-    return <main className="w-full h-screen pb-12 flex justify-center items-center overflow-clip">
+    return <main className="w-full h-screen pb-4 flex justify-center items-center overflow-clip">
         <SlideDisplay
             activeIndex={activeIndex}
-            widthTailwindClass={widthTailwindClass}
-            gapTailwindClass={gapTailwindClass}
-            transformWidthRem={transformWidthRem}
         >
             { slides }
         </SlideDisplay>
@@ -86,22 +81,30 @@ function Loading({ loading }: { loading: boolean }) {
 
 type SlideDisplayParameters = {
     activeIndex: number,
-    widthTailwindClass: string,
-    gapTailwindClass: string,
-    transformWidthRem: number,
-    children: React.ReactNode
+    children: React.ReactNode[]
 }
 
-function SlideDisplay({
-    activeIndex,
-    widthTailwindClass,
-    gapTailwindClass,
-    transformWidthRem,
-    children
-}: SlideDisplayParameters) {
-    return <div className={`${widthTailwindClass}`}>
-        <div className={`flex items-center ${gapTailwindClass} overflow-x-visible transition-transform duration-500`}
-            style={{ transform: `translate(${"-" + (activeIndex * transformWidthRem) + "rem"})` }}
+function SlideDisplay({ activeIndex, children }: SlideDisplayParameters) {
+    const containerRef = useRef<HTMLDivElement>(null);
+    
+    function calculateOffset() {
+        const container = containerRef.current;
+        if(container) {
+            const centers = [...container.children].map(element => {
+                const top = (element as HTMLElement).offsetTop;
+                const height = (element as HTMLElement).offsetHeight;
+                return top + height / 2;
+            });
+            const offsets = centers.map(center => -center / 16)
+            return offsets;
+        }
+        return [];
+    }
+
+    return <div className="translate-y-1/2">
+        <div className={`flex flex-col items-center gap-32 overflow-x-visible transition-transform duration-500`}
+            style={{ transform: `translate(0, ${calculateOffset()[activeIndex] + "rem"})` }}
+            ref={containerRef}
         >
             { children }
         </div>

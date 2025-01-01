@@ -27,7 +27,7 @@ export default function Page() {
         })();
     }, [router]);
 
-    const widthTailwindClass = "w-[48rem]";
+    const widthTailwindClass = "max-w-[48rem]";
     
     const slides: React.ReactNode[] = [
         <WelcomeSlide key={0}
@@ -109,7 +109,7 @@ function SlideDisplay({ activeIndex, children }: SlideDisplayParameters) {
     }
 
     return <div className="translate-y-1/2">
-        <div className={`flex flex-col items-center gap-32 overflow-x-visible transition-transform duration-500`}
+        <div className={`flex flex-col items-center gap-[16rem] overflow-x-visible transition-transform duration-500`}
             style={{ transform: `translate(0, ${calculateOffset()[activeIndex] + "rem"})` }}
             ref={containerRef}
         >

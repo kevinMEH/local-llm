@@ -10,18 +10,11 @@ export default function InstructionSlide({ active, setActiveIndex, setLoadingCou
     
     return <Slide active={active}>
         <div className={`space-y-8 text-sub text-justify`}>
-            <h1 className="text-3xl font-semibold text-main text-center">Downloading Models</h1>
+            <h1 className="text-3xl font-semibold text-main text-center">Choosing a Model</h1>
             <div className="space-y-4 pb-2">
                 <p>
-                    You are now ready to download your first model!
-                    Browse from a selection of trending models on the next page 
-                    or find your own model on <Link href="https://huggingface.co/models?pipeline_tag=text-generation&sort=trending" target="_blank">
-                        Huggingface
-                    </Link> and input the model name
-                    (Example: meta-llama/Llama-3.2-1B-Instruct) into the download field.
-                </p>
-                <p>
-                    Here are some tips for choosing models:
+                    You are now ready to download your first model! But first,
+                    a few tips on choosing the best model for your use case:
                 </p>
                 <ul className="list-disc px-5 space-y-1.5">
                     <li>
@@ -43,8 +36,7 @@ export default function InstructionSlide({ active, setActiveIndex, setLoadingCou
                         are better suited for chatting experiences.
                     </li>
                     <li>
-                        If you have no idea which models to choose, we recommend
-                        <Link target="_blank" href="https://huggingface.co/meta-llama">
+                        If you have no idea which models to choose, we recommend <Link target="_blank" href="https://huggingface.co/meta-llama">
                             Meta's Llama family of models.
                         </Link>
                     </li>

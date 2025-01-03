@@ -14,7 +14,8 @@ export default function InstructionSlide({ active, widthTailwindClass, setActive
             <div className="space-y-4 pb-2">
                 <p>
                     You are now ready to download your first model!
-                    Browse from a selection of trending models or find your own model on <Link href="https://huggingface.co/models?pipeline_tag=text-generation&sort=trending" target="_blank">
+                    Browse from a selection of trending models on the next page 
+                    or find your own model on <Link href="https://huggingface.co/models?pipeline_tag=text-generation&sort=trending" target="_blank">
                         Huggingface
                     </Link> and input the model name
                     (Example: meta-llama/Llama-3.2-1B-Instruct) into the download field.
@@ -24,17 +25,17 @@ export default function InstructionSlide({ active, widthTailwindClass, setActive
                 </p>
                 <ul className="list-disc px-5 space-y-1.5">
                     <li>
-                        Do take note of your system's capabilities
+                        Take note of your system's capabilities
                         (specifically, GPU/TPU memory, and to a lesser extent, main
                         memory) when deciding which model to use.
                     </li>
                     <li>
-                        Smaller models may not give the best results, but models
-                        that are too large will result in extremely slow generation.
-                    </li>
-                    <li>
                         As a rule of thumb, you will need 2 GBs of memory for every
                         1 billion parameters on 16 bit precision.
+                    </li>
+                    <li>
+                        Smaller models may not give the best results, but models
+                        that are too large will result in extremely slow generation.
                     </li>
                     <li>
                         When searching for models, make sure to find ones made for
@@ -43,7 +44,9 @@ export default function InstructionSlide({ active, widthTailwindClass, setActive
                     </li>
                     <li>
                         If you have no idea which models to choose, we recommend
-                        Meta's Llama series of models.
+                        <Link target="_blank" href="https://huggingface.co/meta-llama">
+                            Meta's Llama family of models.
+                        </Link>
                     </li>
                 </ul>
             </div>

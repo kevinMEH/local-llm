@@ -21,8 +21,7 @@ export function NextButton({ setActiveIndex, disabled }: {
     disabled: boolean
 }) {
     return <button
-        className={`w-80 py-3 rounded-md border border-highlight
-        bg-bg-light ${disabled ? "text-quiet opacity-50" : "text-sub hover:bg-bg-mid"}
+        className={`w-80 py-3 rounded-md bg-transparent ${disabled ? "text-quiet opacity-50" : "text-sub hover:bg-bg-mid"}
         transition-colors flex gap-2 items-center justify-center`}
         onClick={() => setActiveIndex(old => old + 1)}
         disabled={disabled}

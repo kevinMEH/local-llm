@@ -5,7 +5,7 @@ import { ConstructedSlideParameters, NextButton, Slide } from "./SlideCommons";
 import { loggedIn, login } from "../api/welcome";
 import SendIcon from "@/design/icons/SendIcon";
 
-export default function HuggingfaceSlide({ active, widthTailwindClass, setActiveIndex, setLoadingCount }: ConstructedSlideParameters) {
+export default function HuggingfaceSlide({ active, setActiveIndex, setLoadingCount }: ConstructedSlideParameters) {
     const [ hasSavedToken, setHasSavedToken ] = useState(false);
     const [ token, setToken ] = useState("");
     const [ tokenSupplied, setTokenSupplied ] = useState(false);
@@ -32,7 +32,7 @@ export default function HuggingfaceSlide({ active, widthTailwindClass, setActive
         }
     }
 
-    return <Slide active={active} widthTailwindClass={widthTailwindClass}>
+    return <Slide active={active}>
         <div className="space-y-8 text-sub">
             <h1 className="text-3xl font-semibold text-main text-center">Huggingface Integration</h1>
             <div className="space-y-4 pb-2">

@@ -3,12 +3,12 @@ import { useEffect } from "react";
 import { ConstructedSlideParameters, NextButton, Slide } from "./SlideCommons";
 import Link from "next/link";
 
-export default function InstructionSlide({ active, widthTailwindClass, setActiveIndex, setLoadingCount }: ConstructedSlideParameters) {
+export default function InstructionSlide({ active, setActiveIndex, setLoadingCount }: ConstructedSlideParameters) {
     useEffect(() => {
         setLoadingCount(count => count - 1);
     }, [setLoadingCount]);
     
-    return <Slide active={active} widthTailwindClass={widthTailwindClass}>
+    return <Slide active={active}>
         <div className={`space-y-8 text-sub text-justify`}>
             <h1 className="text-3xl font-semibold text-main text-center">Downloading Models</h1>
             <div className="space-y-4 pb-2">

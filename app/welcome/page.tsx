@@ -32,8 +32,6 @@ export default function Page() {
         })();
     }, [router]);
 
-    const maxWidthTailwindClass = "max-w-[40rem]";
-    
     type SlideInformation = {
         slide: React.ReactNode,
         title: string,
@@ -46,7 +44,6 @@ export default function Page() {
             active={activeIndex === 0}
             setActiveIndex={setActiveIndex}
             setLoadingCount={setLoadingCount}
-            widthTailwindClass={maxWidthTailwindClass}
         />,
         title: "Welcome!",
         description: "Learn all about how Local LLM works",
@@ -56,7 +53,6 @@ export default function Page() {
             active={activeIndex === 1}
             setActiveIndex={setActiveIndex}
             setLoadingCount={setLoadingCount}
-            widthTailwindClass={maxWidthTailwindClass}
         />,
         title: "Huggingface Integration",
         description: "Connect Local LLM to Huggingface",
@@ -66,7 +62,6 @@ export default function Page() {
             active={activeIndex === 2}
             setActiveIndex={setActiveIndex}
             setLoadingCount={setLoadingCount}
-            widthTailwindClass={maxWidthTailwindClass}
         />,
         title: "Choosing a Model",
         description: "Learn how to choose the best model for your use case",

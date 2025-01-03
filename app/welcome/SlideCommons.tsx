@@ -3,14 +3,13 @@ import { Dispatch, SetStateAction } from "react";
 
 type SlideParameters = {
     active: boolean,
-    widthTailwindClass: string,
     className?: string,
     children: React.ReactNode
 }
 
-export function Slide({ active, widthTailwindClass, className = "", children }: SlideParameters) {
+export function Slide({ active, className = "", children }: SlideParameters) {
     return <div className="h-screen flex items-center px-8 pb-20 pt-16">
-        <div className={`${active ? "opacity-100" : "opacity-50"} transition-opacity ${widthTailwindClass} ${className}`}>
+        <div className={`${active ? "opacity-100" : "opacity-50"} transition-opacity max-w-[40rem] ${className}`}>
             { children }
         </div>
     </div>
@@ -34,7 +33,6 @@ export function NextButton({ setActiveIndex, disabled }: {
 
 export type ConstructedSlideParameters = {
     active: boolean,
-    widthTailwindClass: string,
     setActiveIndex: Dispatch<SetStateAction<number>>,
     setLoadingCount: Dispatch<SetStateAction<number>>
 }

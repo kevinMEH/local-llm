@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ConstructedSlideParameters, NextButton, Slide } from "./SlideCommons";
 
-export default function WelcomeSlide({ active, widthTailwindClass, setActiveIndex, setLoadingCount }: ConstructedSlideParameters) {
+export default function WelcomeSlide({ active, setActiveIndex, setLoadingCount }: ConstructedSlideParameters) {
     const [ hasInternet, setHasInternet ] = useState(true);
 
     useEffect(() => {
@@ -12,7 +12,7 @@ export default function WelcomeSlide({ active, widthTailwindClass, setActiveInde
         });
     }, [setLoadingCount]);
 
-    return <Slide active={active} widthTailwindClass={widthTailwindClass}>
+    return <Slide active={active}>
         <div className="space-y-8 text-sub text-justify">
             <h1 className="text-3xl font-semibold text-main text-center">
                 Welcome to Local LLM!

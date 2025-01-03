@@ -11,6 +11,7 @@ import BookOpenIcon from "@/design/icons/BookOpenIcon";
 import LinkIcon from "@/design/icons/LinkIcon";
 import ArrowLeftIcon from "@/design/icons/ArrowLeftIcon";
 import StarIcon from "@/design/icons/StarIcon";
+import type { ConstructedSlideParameters } from "./SlideCommons";
 
 export default function Page() {
     const slideCount = 3;
@@ -31,38 +32,19 @@ export default function Page() {
             }
         })();
     }, [router]);
-
-    type SlideInformation = {
-        slide: React.ReactNode,
-        title: string,
-        description: string,
-        icon: (props: { size: number, className: string }) => React.JSX.Element
-    };
     
     const slides: SlideInformation[] = [{
-        slide: <WelcomeSlide key={0}
-            active={activeIndex === 0}
-            setActiveIndex={setActiveIndex}
-            setLoadingCount={setLoadingCount}
-        />,
+        slide: WelcomeSlide,
         title: "Welcome!",
         description: "Learn all about how Local LLM works",
         icon: StarIcon
     }, {
-        slide: <HuggingfaceSlide key={1}
-            active={activeIndex === 1}
-            setActiveIndex={setActiveIndex}
-            setLoadingCount={setLoadingCount}
-        />,
+        slide: HuggingfaceSlide,
         title: "Huggingface Integration",
         description: "Connect Local LLM to Huggingface",
         icon: LinkIcon
     }, {
-        slide: <InstructionSlide key={2}
-            active={activeIndex === 2}
-            setActiveIndex={setActiveIndex}
-            setLoadingCount={setLoadingCount}
-        />,
+        slide: InstructionSlide,
         title: "Choosing a Model",
         description: "Learn how to choose the best model for your use case",
         icon: BookOpenIcon
@@ -86,23 +68,7 @@ export default function Page() {
                 <h1 className="text-3xl font-bold text-sub text-center">Local LLM</h1>
                 <div className="flex-grow flex flex-col justify-center pb-8">
                     { slides.map((slide, i) => (
-                        <div key={i} className={`flex gap-5`}>
-                            <div className="flex flex-col">
-                                <div
-                                    className={`border border-highlight rounded-md w-10 h-10 flex items-center justify-center
-                                    ${i === activeIndex ? "opacity-100" : "opacity-50"} transition-opacity duration-500`}
-                                >
-                                    <slide.icon size={20} className="text-sub" />
-                                </div>
-                                { i !== slides.length - 1 &&
-                                    <div className="border-[0.5px] ml-[20px] border-highlight flex-1 w-0 opacity-50"></div>
-                                }
-                            </div>
-                            <div className={`flex-1 pb-6 ${i === activeIndex ? "opacity-100" : "opacity-50"} transition-opacity duration-500`}>
-                                <h2 className="font-medium text-main tracking-wide">{slide.title}</h2>
-                                <p className="text-sub text-sm min-h-10">{slide.description}</p>
-                            </div>
-                        </div>
+                    <LinkedItems key={i} active={i === activeIndex} slide={slide} />
                     ))}
                 </div>
             </div>
@@ -111,47 +77,45 @@ export default function Page() {
                 setActiveIndex={setActiveIndex}
                 className="flex-1 bg-bg-light/60"
             >
-                { slides.map(slide => slide.slide) }
+                { slides.map((slide, i) => {
+                    return <slide.slide
+                        key={i} active={activeIndex === i} setActiveIndex={setActiveIndex} setLoadingCount={setLoadingCount}
+                    />
+                }) }
             </SlideDisplay>
         </div>
         { !unloadLoadingPage && <Loading loading={loading} setUnloadLoadingPage={setUnloadLoadingPage} /> }
     </main>
 }
 
-function Loading({ loading, setUnloadLoadingPage }: { loading: boolean, setUnloadLoadingPage: Dispatch<SetStateAction<boolean>> }) {
-    const [ dots, setDots ] = useState("...");
+type SlideInformation = {
+    slide: (props: ConstructedSlideParameters) => React.ReactNode,
+    title: string,
+    description: string,
+    icon: (props: { size: number, className: string }) => React.JSX.Element
+};
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setDots(dots => ".".repeat((dots.length + 1) % 4));
-        }, 500);
-        return () => clearInterval(interval);
-    }, []);
-    
-    useEffect(() => {
-        if(!loading) {
-            setTimeout(() => setUnloadLoadingPage(true), 1000);
-        }
-    }, [ loading, setUnloadLoadingPage ])
-
-    return <div
-        className={`absolute inset-0 pb-12 bg-bg-dark z-10
-        pointer-events-none ${loading ? "opacity-100" : "opacity-0" }
-        transition-opacity duration-500 flex items-center justify-center
-        text-sub text-2xl font-mono`}
-    >
-        Loading{dots}
+function LinkedItems({ active, slide }: { active: boolean, slide: SlideInformation }) {
+    return <div className={`flex gap-5 group`}>
+        <div className="flex flex-col">
+            <div
+                className={`border border-highlight rounded-md w-10 h-10 flex items-center justify-center
+                ${active ? "opacity-100" : "opacity-50"} transition-opacity duration-500`}
+            >
+                <slide.icon size={20} className="text-sub" />
+            </div>
+            <div className="group-last:hidden border-[0.5px] ml-[20px] border-highlight flex-1 w-0 opacity-50"></div>
+        </div>
+        <div className={`flex-1 pb-6 ${active ? "opacity-100" : "opacity-50"} transition-opacity duration-500`}>
+            <h2 className="font-medium text-main tracking-wide">{slide.title}</h2>
+            <p className="text-sub text-sm min-h-10">{slide.description}</p>
+        </div>
     </div>
 }
 
-type SlideDisplayParameters = {
-    activeIndex: number,
-    setActiveIndex: Dispatch<SetStateAction<number>>,
-    className: string,
-    children: React.ReactNode[]
-}
-
-function SlideDisplay({ activeIndex, setActiveIndex, children, className }: SlideDisplayParameters) {
+function SlideDisplay({ activeIndex, setActiveIndex, children, className }: {
+    activeIndex: number, setActiveIndex: Dispatch<SetStateAction<number>>, className: string, children: React.ReactNode[]
+}) {
     const [ _resize, setResize ] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
     
@@ -195,5 +159,31 @@ function SlideDisplay({ activeIndex, setActiveIndex, children, className }: Slid
                 { children }
             </div>
         </div>
+    </div>
+}
+
+function Loading({ loading, setUnloadLoadingPage }: { loading: boolean, setUnloadLoadingPage: Dispatch<SetStateAction<boolean>> }) {
+    const [ dots, setDots ] = useState("...");
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setDots(dots => ".".repeat((dots.length + 1) % 4));
+        }, 500);
+        return () => clearInterval(interval);
+    }, []);
+    
+    useEffect(() => {
+        if(!loading) {
+            setTimeout(() => setUnloadLoadingPage(true), 1000);
+        }
+    }, [ loading, setUnloadLoadingPage ])
+
+    return <div
+        className={`absolute inset-0 pb-12 bg-bg-dark z-10
+        pointer-events-none ${loading ? "opacity-100" : "opacity-0" }
+        transition-opacity duration-500 flex items-center justify-center
+        text-sub text-2xl font-mono`}
+    >
+        Loading{dots}
     </div>
 }

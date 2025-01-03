@@ -4,17 +4,20 @@ import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "re
 import { useRouter } from "next/navigation";
 
 import { getSettings } from "../api/settings";
-import WelcomeSlide from "./WelcomeSlide";
-import HuggingfaceSlide from "./HuggingfaceSlide";
-import InstructionSlide from "./InstructionSlide";
 import BookOpenIcon from "@/design/icons/BookOpenIcon";
 import LinkIcon from "@/design/icons/LinkIcon";
 import ArrowLeftIcon from "@/design/icons/ArrowLeftIcon";
 import StarIcon from "@/design/icons/StarIcon";
+import SearchIcon from "@/design/icons/SearchIcon";
+
 import type { ConstructedSlideParameters } from "./SlideCommons";
+import WelcomeSlide from "./WelcomeSlide";
+import HuggingfaceSlide from "./HuggingfaceSlide";
+import InstructionSlide from "./InstructionSlide";
+import DownloadSlide from "./DownloadSlide";
 
 export default function Page() {
-    const slideCount = 3;
+    const slideCount = 4;
     const [ loadingCount, setLoadingCount ] = useState(slideCount);
     const [ activeIndex, setActiveIndex ] = useState(0);
     const [ unloadLoadingPage, setUnloadLoadingPage ] = useState(false);
@@ -48,7 +51,12 @@ export default function Page() {
         title: "Choosing a Model",
         description: "Learn how to choose the best model for your use case",
         icon: BookOpenIcon
-    }]
+    }, {
+        slide: DownloadSlide,
+        title: "Downloading Models",
+        description: "Browse and download models for Local LLM",
+        icon: SearchIcon
+    }];
     
     // Star
     // Link

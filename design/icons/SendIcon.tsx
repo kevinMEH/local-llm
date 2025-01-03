@@ -1,25 +1,26 @@
 type Parameters = {
-    width: number;
-    height: number;
+    size: number;
+    strokeWidth?: number;
     className?: string;
 };
 
-function SendIcon({ width, height, className }: Parameters) {
+function SendIcon({ size, strokeWidth = 2, className }: Parameters) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
-            width={width}
-            height={height}
             fill="none"
             stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
             viewBox="0 0 24 24"
-            strokeWidth={2}
+            width={size}
+            height={size}
+            strokeWidth={strokeWidth}
             className={className}
         >
-            <line x1="22" y1="2" x2="11" y2="13"></line>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+            />
         </svg>
     );
 }

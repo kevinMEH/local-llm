@@ -1,24 +1,26 @@
 type Parameters = {
-    width: number,
-    height: number,
-    className?: string
-}
+    size: number;
+    strokeWidth?: number;
+    className?: string;
+};
 
-function ChevronDownIcon({ width, height, className }: Parameters) {
+function ChevronDownIcon({ size, strokeWidth = 2, className }: Parameters) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
-            width={width}
-            height={height}
             fill="none"
             stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
             viewBox="0 0 24 24"
-            strokeWidth={2}
+            width={size}
+            height={size}
+            strokeWidth={strokeWidth}
             className={className}
         >
-            <polyline points="6 9 12 15 18 9"></polyline>
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m19.5 8.25-7.5 7.5-7.5-7.5"
+            />
         </svg>
     );
 }

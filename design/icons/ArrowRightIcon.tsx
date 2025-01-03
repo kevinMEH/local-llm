@@ -1,28 +1,26 @@
 type Parameters = {
-    width: number;
-    height: number;
+    size: number;
+    strokeWidth?: number;
     className?: string;
 };
 
-/**
- * Box 14 x 24
- */
-function ArrowRightIcon({ width, height, className }: Parameters) {
+function ArrowRightIcon({ size, strokeWidth = 2, className }: Parameters) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
-            width={width}
-            height={height}
             fill="none"
             stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            viewBox="0 0 14 24"
-            strokeWidth={2}
+            viewBox="0 0 24 24"
+            width={size}
+            height={size}
+            strokeWidth={strokeWidth}
             className={className}
         >
-            <line x1="0" y1="12" x2="14" y2="12"></line>
-            <polyline points="7 5 14 12 7 19"></polyline>
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+            />
         </svg>
     );
 }

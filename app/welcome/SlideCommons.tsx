@@ -26,8 +26,8 @@ export function NextButton({ setActiveIndex, disabled }: {
         onClick={() => setActiveIndex(old => old + 1)}
         disabled={disabled}
     >
-        <span>Next</span>
-        <ArrowRightIcon height={20} width={20} />
+        <span className="font-mono">Next</span>
+        <ArrowRightIcon size={16} strokeWidth={2.5} />
     </button>
 }
 

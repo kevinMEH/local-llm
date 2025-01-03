@@ -5,7 +5,7 @@ import { readStreamableValue } from "ai/rsc";
 
 import SendIcon from "@/design/icons/SendIcon";
 import ChevronDownIcon from "@/design/icons/ChevronDownIcon";
-import EditIcon from "@/design/icons/EditIcon";
+import BrushIcon from "@/design/icons/BrushIcon";
 import { addMessage, changeTitle, createConversation } from "./api/conversations";
 import { completions } from "./api/completions";
 import type { FrontendConversation, ReduceAction } from "./page.jsx";
@@ -127,7 +127,7 @@ export default function Chat({ activeConversation, dispatchConversations, setAct
             >
                 <div className="flex items-center justify-between w-full max-w-3xl">
                     <div className="flex items-center gap-3 text-sub">
-                        <EditIcon width={15} height={15} className={title === "" ? "text-sub" : "text-quiet"} />
+                        <BrushIcon size={15} className={title === "" ? "text-sub" : "text-quiet"} />
                         <input
                             className="w-full bg-transparent placeholder-quiet flex-1 outline-none font-medium py-1.5"
                             value={title}
@@ -137,7 +137,7 @@ export default function Chat({ activeConversation, dispatchConversations, setAct
                     </div>
                     <button className="flex items-center gap-2 pl-5 pr-[1.125rem] py-3 rounded-md text-nowrap hover:bg-bg-light">
                         <p>{ model }</p>
-                        <ChevronDownIcon width={18} height={18} />
+                        <ChevronDownIcon size={18} />
                     </button>
                 </div>
             </Recenterer>
@@ -200,7 +200,7 @@ export default function Chat({ activeConversation, dispatchConversations, setAct
                         event.preventDefault();
                         onSubmit();
                     }}>
-                        <SendIcon width={24} height={24} />
+                        <SendIcon size={24} />
                     </button>
                 </div>
             </Recenterer>

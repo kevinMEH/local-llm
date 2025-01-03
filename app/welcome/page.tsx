@@ -7,10 +7,10 @@ import { getSettings } from "../api/settings";
 import WelcomeSlide from "./WelcomeSlide";
 import HuggingfaceSlide from "./HuggingfaceSlide";
 import InstructionSlide from "./InstructionSlide";
-import SendIcon from "@/design/icons/SendIcon";
 import BookOpenIcon from "@/design/icons/BookOpenIcon";
 import LinkIcon from "@/design/icons/LinkIcon";
 import ArrowLeftIcon from "@/design/icons/ArrowLeftIcon";
+import StarIcon from "@/design/icons/StarIcon";
 
 export default function Page() {
     const slideCount = 3;
@@ -38,7 +38,7 @@ export default function Page() {
         slide: React.ReactNode,
         title: string,
         description: string,
-        icon: (props: { width: number, height: number, className: string }) => React.JSX.Element
+        icon: (props: { size: number, className: string }) => React.JSX.Element
     };
     
     const slides: SlideInformation[] = [{
@@ -50,7 +50,7 @@ export default function Page() {
         />,
         title: "Welcome!",
         description: "Learn all about how Local LLM works",
-        icon: SendIcon
+        icon: StarIcon
     }, {
         slide: <HuggingfaceSlide key={1}
             active={activeIndex === 1}
@@ -73,11 +73,11 @@ export default function Page() {
         icon: BookOpenIcon
     }]
     
-    // Send
-    // Arrow Right
+    // Star
+    // Link
     // Book open
     // Search
-    // Check
+    // Rocket
 
     if(slideCount !== slides.length) {
         throw new Error("Note to developer: Please update slideCount.")
@@ -97,7 +97,7 @@ export default function Page() {
                                     className={`border border-highlight rounded-md w-10 h-10 flex items-center justify-center
                                     ${i === activeIndex ? "opacity-100" : "opacity-50"} transition-opacity duration-500`}
                                 >
-                                    <slide.icon width={20} height={20} className="text-sub" />
+                                    <slide.icon size={20} className="text-sub" />
                                 </div>
                                 { i !== slides.length - 1 &&
                                     <div className="border-[0.5px] ml-[20px] border-highlight flex-1 w-0 opacity-50"></div>
@@ -189,8 +189,8 @@ function SlideDisplay({ activeIndex, setActiveIndex, children, className }: Slid
             cursor-pointer flex gap-2 items-center text-sub`}
             onClick={() => setActiveIndex(index => index - 1)}
         >
-            <ArrowLeftIcon width={18} height={18} />
-            <span>Back</span>
+            <ArrowLeftIcon size={16} strokeWidth={2.5} />
+            <span className="font-mono">Back</span>
         </button> }
         <div className="h-full translate-y-1/2">
             <div className={`flex flex-col items-center gap-[16rem] overflow-x-visible transition-transform duration-500`}

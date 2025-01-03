@@ -64,7 +64,7 @@ export default function HuggingfaceSlide({ active, widthTailwindClass, setActive
                                 disabled={hasSavedToken || tokenSupplied}
                             >
                                 <span className="font-mono">Submit</span>
-                                <SendIcon width={16} height={16} className="rotate-45" />
+                                <SendIcon size={16} />
                             </button>
                         </div>
                         { tokenError && !tokenSupplied && <p className="text-sm text-error">{ tokenError }</p> }

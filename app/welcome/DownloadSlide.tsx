@@ -105,10 +105,10 @@ function DownloadedModelElement({ repo }: { repo: HFRepo }) {
     
     return <div className="border border-highlight first:mt-0 -mt-[1px]
     first:rounded-t-md last:rounded-b-md px-5 py-3 flex gap-5 min-w-0">
-        <div className="flex items-center w-10">
+        <div className="flex items-center shrink-0">
             {
                 avatarUrl
-                ?  <Image className="rounded-md" src={avatarUrl} alt={`${repoOwner}'s avatar`} width={40} height={40} />
+                ?  <Image unoptimized className="rounded-md" src={avatarUrl} alt={`${repoOwner}'s avatar`} width={40} height={40} />
                 : <div className="rounded-full border box-content border-highlight w-10 h-10" />
             }
         </div>
@@ -222,10 +222,10 @@ function ListedModelElement({ model }: { model: ModelEntry }) {
     
     return <div className="border border-highlight first:mt-0 -mt-[1px]
     first:rounded-t-md last:rounded-b-md px-5 py-3 flex gap-5 min-w-0">
-        <div className="flex items-center w-10">
+        <div className="flex items-center shrink-0">
             {
                 avatarUrl
-                ?  <Image className="rounded-md" src={avatarUrl} alt={`${repoOwner}'s avatar`} width={40} height={40} />
+                ?  <Image unoptimized className="rounded-md" src={avatarUrl} alt={`${repoOwner}'s avatar`} width={40} height={40} />
                 : <div className="rounded-full border box-content border-highlight w-10 h-10" />
             }
         </div>

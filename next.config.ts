@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
             {
                 protocol: "https",
                 hostname: "cdn-avatars.huggingface.co"
+            }, {
+                protocol: "https",
+                hostname: "www.gravatar.com"
             }
         ]
     }

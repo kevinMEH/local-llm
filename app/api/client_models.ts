@@ -139,3 +139,38 @@ export async function modelInformation(modelId: string): Promise<ModelInformatio
     const modelInformation = await response.json();
     return modelInformation;
 }
+
+export function calculateModelSizeBytes(model: ModelInformation): number {
+    let size = 0;
+    for(const sibling of model.siblings) {
+        size += sibling.size;
+    }
+    return size;
+}
+
+/**
+ * You may wonder why 1000 is used instead of 1024:
+ * We always consider the worst case scenario for the user, thus we try to make
+ * the storage size as large as possible.
+ */
+ export function bytesToReadable(bytes: number): string {
+    const units = [ " B", " KB", " MB", " GB" ];
+    return unitize(bytes, units);
+}
+
+export function numberToReadable(number: number): string {
+    return unitize(number, ["", "k", "M"]);
+}
+
+function unitize(amount: number, units: string[]) {
+    let unitsIndex = 0;
+    while(amount > 1000 && unitsIndex < units.length - 1) {
+        amount = amount / 1000;
+        unitsIndex += 1;
+    }
+    if(unitsIndex !== 0) {
+        return amount.toFixed(2) + "" + units[unitsIndex];
+    } else {
+        return amount + "" + units[unitsIndex];
+    }
+}

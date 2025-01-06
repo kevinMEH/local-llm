@@ -22,7 +22,7 @@ function ElementTemplate({ id, className = "", children }: { id: string, classNa
                 }
             }
         })();
-    }, [repoOwner]);
+    }, [repoOwner, id]);
 
     return <div className="border border-highlight first:mt-0 -mt-[1px]
     first:rounded-t-md last:rounded-b-md px-5 py-3 flex gap-5 min-w-0">
@@ -51,20 +51,23 @@ export function DownloadedModelElement({ repo }: { repo: HFRepo }) {
     </ElementTemplate>
 }
 
-export function ListedModelElement({ model }: { model: ModelEntry }) {
+export function ListedModelElement({ model, downloaded }: { model: ModelEntry, downloaded: boolean }) {
     const { id, likes, downloads } = model;
     
-    return <ElementTemplate id={id} className="space-y-1">
-        <h3 className="font-mono text-sm min-w-0">{id}</h3>
-        <p className="text-xs flex gap-3 text-quiet">
-            <span className="flex gap-1 text-xs items-center">
+    return <ElementTemplate id={id} className={`space-y-1 ${downloaded ? "opacity-50" : ""}`}>
+        <h3 className={`font-mono text-sm min-w-0`}>{id}</h3>
+        <div className={`text-xs flex gap-3 text-quiet items-center`}>
+            { downloaded && <span className="px-1.5 py-1 rounded-md bg-bg-mid text-xs">
+                downloaded
+            </span> }
+            <span className="flex gap-1 items-center">
                 <HeartIcon size={14} />
                 <span>{ numberToReadable(likes) }</span>
             </span>
-            <span className="flex gap-1 text-xs items-center">
+            <span className="flex gap-1 items-center">
                 <DownloadIcon size={14} />
                 <span>{ numberToReadable(downloads) }</span>
             </span>
-        </p>
+        </div>
     </ElementTemplate>
 }

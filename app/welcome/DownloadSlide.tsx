@@ -1,14 +1,14 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+
+import { getGeneratorBatch, InfiniteAsyncGenerator, listModels, ModelEntry } from "../api/client_models";
+import { getCache, HFCache } from "../api/server_models";
+
+import ScrollHint from "./ScrollHint";
+import { DownloadedModelElement, ListedModelElement } from "./ModelElements";
+import { ConstructedSlideParameters, NextButton, Slide } from "./SlideCommons";
 
 import RefreshIcon from "@/design/icons/RefreshIcon";
-import { ConstructedSlideParameters, NextButton, Slide } from "./SlideCommons";
-import { bytesToReadable, getGeneratorBatch, InfiniteAsyncGenerator, listModels, ModelEntry, numberToReadable } from "../api/client_models";
-import { getCache, HFCache, HFRepo } from "../api/server_models";
-import HeartIcon from "@/design/icons/HeartIcon";
-import ScrollHint from "./ScrollHint";
-import DownloadIcon from "@/design/icons/DownloadIcon";
 
 export default function DownloadSlide({ active, setActiveIndex, setLoadingCount }: ConstructedSlideParameters) {
     const [ cache, setCache ] = useState<HFCache>();
@@ -80,46 +80,6 @@ export default function DownloadSlide({ active, setActiveIndex, setLoadingCount 
     </Slide>
 }
 
-function DownloadedModelElement({ repo }: { repo: HFRepo }) {
-    const { repo_id, size_on_disk, nb_files, last_accessed } = repo;
-    const lastAccessedDate = new Date(last_accessed * 1000);
-    const readableSizeOnDisk = bytesToReadable(size_on_disk);
-    
-    const repoOwner = repo_id.substring(0, repo_id.indexOf("/"));
-    const [ avatarUrl, setAvatarUrl ] = useState<string | undefined>(undefined);
-    useEffect(() => {
-        (async () => {
-            const response = await fetch(`https://huggingface.co/api/organizations/${repoOwner}/avatar`);
-            const data = await response.json();
-            if(data.avatarUrl) {
-                setAvatarUrl(data.avatarUrl as string);
-            } else {
-                const response = await fetch(`https://huggingface.co/api/users/${repoOwner}/avatar`);
-                const data = await response.json();
-                if(data.avatarUrl) {
-                    setAvatarUrl(data.avatarUrl as string);
-                }
-            }
-        })();
-    }, [repoOwner]);
-    
-    return <div className="border border-highlight first:mt-0 -mt-[1px]
-    first:rounded-t-md last:rounded-b-md px-5 py-3 flex gap-5 min-w-0">
-        <div className="flex items-center shrink-0">
-            {
-                avatarUrl
-                ?  <Image unoptimized className="rounded-md" src={avatarUrl} alt={`${repoOwner}'s avatar`} width={40} height={40} />
-                : <div className="rounded-full border box-content border-highlight w-10 h-10" />
-            }
-        </div>
-        <div className="text-left min-w-0 *:overflow-hidden *:text-ellipsis whitespace-nowrap">
-            <h3 className="font-mono text-sm min-w-0">{repo_id}</h3>
-            <p className="text-xs text-quiet">{`Last accessed: ${lastAccessedDate.toLocaleString()}`}</p>
-            <p className="text-xs text-quiet">{nb_files} files occupying {readableSizeOnDisk}</p>
-        </div>
-    </div>
-}
-
 function ModelPageDisplay({ cache, className }: { cache: HFCache | undefined, className: string }) {
     const [ generator, setGenerator ] = useState<InfiniteAsyncGenerator<ModelEntry, undefined>>(listModels());
     const [ models, setModels ] = useState<ModelEntry[]>([]);
@@ -188,59 +148,5 @@ function ModelPageDisplay({ cache, className }: { cache: HFCache | undefined, cl
         <ScrollHint className="overflow-y-scroll hide-scrollbar">
             { currentPageModels.map((model, i) => <ListedModelElement key={i} model={model} /> )}
         </ScrollHint>
-    </div>
-}
-
-/*
-    id: string;
-    likes: number;
-    trendingScore: number;
-    downloads: number;
-    tags: string[];
-    createdAt: string;
-*/
-function ListedModelElement({ model }: { model: ModelEntry }) {
-    const { id, likes, downloads } = model;
-    
-    const repoOwner = id.substring(0, id.indexOf("/"));
-    const [ avatarUrl, setAvatarUrl ] = useState<string | undefined>(undefined);
-    useEffect(() => {
-        (async () => {
-            const response = await fetch(`https://huggingface.co/api/organizations/${repoOwner}/avatar`);
-            const data = await response.json();
-            if(data.avatarUrl) {
-                setAvatarUrl(data.avatarUrl as string);
-            } else {
-                const response = await fetch(`https://huggingface.co/api/users/${repoOwner}/avatar`);
-                const data = await response.json();
-                if(data.avatarUrl) {
-                    setAvatarUrl(data.avatarUrl as string);
-                }
-            }
-        })();
-    }, [repoOwner]);
-    
-    return <div className="border border-highlight first:mt-0 -mt-[1px]
-    first:rounded-t-md last:rounded-b-md px-5 py-3 flex gap-5 min-w-0">
-        <div className="flex items-center shrink-0">
-            {
-                avatarUrl
-                ?  <Image unoptimized className="rounded-md" src={avatarUrl} alt={`${repoOwner}'s avatar`} width={40} height={40} />
-                : <div className="rounded-full border box-content border-highlight w-10 h-10" />
-            }
-        </div>
-        <div className="text-left min-w-0 space-y-1 *:overflow-hidden *:text-ellipsis whitespace-nowrap">
-            <h3 className="font-mono text-sm min-w-0">{id}</h3>
-            <p className="text-xs flex gap-3 text-quiet">
-                <span className="flex gap-1 text-xs items-center">
-                    <HeartIcon size={14} />
-                    <span>{ numberToReadable(likes) }</span>
-                </span>
-                <span className="flex gap-1 text-xs items-center">
-                    <DownloadIcon size={14} />
-                    <span>{ numberToReadable(downloads) }</span>
-                </span>
-            </p>
-        </div>
     </div>
 }

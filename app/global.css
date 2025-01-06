@@ -16,6 +16,14 @@
     scrollbar-color: #0d1719 transparent;
 }
 
+.hide-scrollbar {
+    scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
 .ql-container {
     height: 100%;
     position: relative;

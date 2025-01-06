@@ -81,24 +81,16 @@ export default function DownloadSlide({ active, setActiveIndex, setLoadingCount 
 }
 
 function ModelPageDisplay({ cache, className }: { cache: HFCache | undefined, className: string }) {
-    const [ generator, setGenerator ] = useState<InfiniteAsyncGenerator<ModelEntry, undefined>>(listModels());
+    const [ generator, setGenerator ] = useState<InfiniteAsyncGenerator<ModelEntry, undefined>>(listModels({
+        filter: [ "text-generation" ]
+    }));
     const [ models, setModels ] = useState<ModelEntry[]>([]);
     const [ page, setPage ] = useState(0);
     const [ pageLimit, setPageLimit ] = useState(Infinity);
     const [ searchText, setSearchText ] = useState("");
     const [ searchTimeout, setSearchTimeout ] = useState<number | undefined>(undefined);
-    const [ realSearch, setRealSearch ] = useState("");
     
     const itemsPerPage = 10;
-    
-    useEffect(() => {
-        setGenerator(listModels({
-            search: realSearch ? realSearch : undefined,
-            filter: [ "text-generation" ]
-        }));
-        setPage(0);
-        setPageLimit(Infinity);
-    }, [ realSearch ]);
     
     // We will always have current page and next page ready
     useEffect(() => {
@@ -133,7 +125,12 @@ function ModelPageDisplay({ cache, className }: { cache: HFCache | undefined, cl
         const value = event.target.value;
         setSearchText(value);
         setSearchTimeout(window.setTimeout(() => {
-            setRealSearch(value);
+            setGenerator(listModels({
+                search: value ? value : undefined,
+                filter: [ "text-generation" ]
+            }));
+            setPage(0);
+            setPageLimit(Infinity);
         }, 5000));
     }
     
@@ -146,7 +143,7 @@ function ModelPageDisplay({ cache, className }: { cache: HFCache | undefined, cl
             placeholder="Search for models..."
         /> */}
         <ScrollHint className="overflow-y-scroll hide-scrollbar">
-            { currentPageModels.map((model, i) => <ListedModelElement key={i} model={model} /> )}
+            { currentPageModels.map((model, i) => <ListedModelElement key={i} model={model} downloaded={i%2 === 0} /> )}
         </ScrollHint>
     </div>
 }

@@ -5,7 +5,9 @@ export default function WelcomeSlide({ active, setActiveIndex, setLoadingCount }
     const [ hasInternet, setHasInternet ] = useState(true);
 
     useEffect(() => {
-        fetch("https://huggingface.co/api/models/meta-llama/Llama-3.2-3B-Instruct").catch(() => {
+        fetch("https://huggingface.co/api/models/meta-llama/Llama-3.2-3B-Instruct", {
+            signal: AbortSignal.timeout(3000)
+        }).catch(() => {
             setHasInternet(false);
         }).finally(() => {
             setLoadingCount(count => count - 1);

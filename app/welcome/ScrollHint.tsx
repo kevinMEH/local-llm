@@ -1,10 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 
-export default function ScrollHint({ className, children }: { className: string, children: React.ReactNode }) {
+export default function ScrollHint({ scrollToTop = 0, className, children }: { scrollToTop?: number, className: string, children: React.ReactNode }) {
     const [ topShadow, setTopShadow ] = useState(false);
     const [ bottomShadow, setBottomShadow ] = useState(false);
+    const [ previousScrollToTop, setPreviousScrollToTop ] = useState(scrollToTop);
     
     const elementRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if(scrollToTop !== previousScrollToTop) {
+            const element = elementRef.current;
+            if(element) {
+                element.scrollTop = 0;
+            }
+            setPreviousScrollToTop(scrollToTop);
+        }
+    }, [previousScrollToTop, scrollToTop]);
     
     function toppedOut() {
         const element = elementRef.current;

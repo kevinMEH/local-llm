@@ -10,6 +10,7 @@ function ElementTemplate({ id, className = "", children }: { id: string, classNa
     const repoOwner = id.substring(0, id.indexOf("/"));
     useEffect(() => {
         (async () => {
+            setAvatarUrl(undefined);
             const response = await fetch(`https://huggingface.co/api/organizations/${repoOwner}/avatar`);
             const data = await response.json();
             if(data.avatarUrl) {
@@ -22,7 +23,7 @@ function ElementTemplate({ id, className = "", children }: { id: string, classNa
                 }
             }
         })();
-    }, [repoOwner, id]);
+    }, [repoOwner]);
 
     return <div className="border border-highlight first:mt-0 -mt-[1px]
     first:rounded-t-md last:rounded-b-md px-5 py-3 flex gap-5 min-w-0">

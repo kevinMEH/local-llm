@@ -17,7 +17,7 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "Offline LLM"
+    title: "Local LLM"
 }
 
 export default function RootLayout({

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import HeartIcon from "@/design/icons/HeartIcon";
 import DownloadIcon from "@/design/icons/DownloadIcon";
 
-function ElementTemplate({ id, className = "", children }: { id: string, className?: string, children: React.ReactNode }) {
+function ElementTemplate({ id, downloaded, className = "", children }: { id: string, downloaded: boolean, className?: string, children: React.ReactNode }) {
     const [ avatarUrl, setAvatarUrl ] = useState<string | undefined>(undefined);
     const repoOwner = id.substring(0, id.indexOf("/"));
     useEffect(() => {
@@ -25,16 +25,16 @@ function ElementTemplate({ id, className = "", children }: { id: string, classNa
         })();
     }, [repoOwner]);
 
-    return <div className="border border-highlight first:mt-0 -mt-[1px]
-    first:rounded-t-md last:rounded-b-md px-5 py-3 flex gap-5 min-w-0">
-        <div className="flex items-center shrink-0">
+    return <div className={`border border-highlight first:mt-0 -mt-[1px]
+    first:rounded-t-md last:rounded-b-md px-5 py-3 flex gap-5 min-w-0`}>
+        <div className={`flex items-center shrink-0 ${downloaded ? "opacity-50" : ""}`}>
             {
                 avatarUrl
                 ?  <Image unoptimized className="rounded-md" src={avatarUrl} alt={`${repoOwner}'s avatar`} width={40} height={40} />
-                : <div className="rounded-full border box-content border-highlight w-10 h-10" />
+                : <div className="rounded-full border box-border border-highlight w-10 h-10" />
             }
         </div>
-        <div className={`text-left min-w-0 *:overflow-hidden *:text-ellipsis whitespace-nowrap ${className}`}>
+        <div className={`text-left min-w-0 *:overflow-hidden *:text-ellipsis whitespace-nowrap ${downloaded ? "opacity-50" : ""} ${className}`}>
             { children }
         </div>
     </div>
@@ -45,7 +45,7 @@ export function DownloadedModelElement({ repo }: { repo: HFRepo }) {
     const lastAccessedDate = new Date(last_accessed * 1000);
     const readableSizeOnDisk = bytesToReadable(size_on_disk);
     
-    return <ElementTemplate id={repo_id}>
+    return <ElementTemplate downloaded={false} id={repo_id}>
         <h3 className="font-mono text-sm min-w-0">{repo_id}</h3>
         <p className="text-xs text-quiet">{`Last accessed: ${lastAccessedDate.toLocaleString()}`}</p>
         <p className="text-xs text-quiet">{nb_files} files occupying {readableSizeOnDisk}</p>
@@ -55,7 +55,7 @@ export function DownloadedModelElement({ repo }: { repo: HFRepo }) {
 export function ListedModelElement({ model, downloaded }: { model: ModelEntry, downloaded: boolean }) {
     const { id, likes, downloads } = model;
     
-    return <ElementTemplate id={id} className={`space-y-1 ${downloaded ? "opacity-50" : ""}`}>
+    return <ElementTemplate downloaded={downloaded} id={id} className={`space-y-1`}>
         <h3 className={`font-mono text-sm min-w-0`}>{id}</h3>
         <div className={`text-xs flex gap-3 text-quiet items-center`}>
             { downloaded && <span className="px-1.5 py-1 rounded-md bg-bg-mid text-xs">

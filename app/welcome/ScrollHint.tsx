@@ -64,11 +64,11 @@ export default function ScrollHint({ scrollToTop = 0, className, children }: { s
     const shadowClass = bottomShadow
     ? (
         topShadow
-        ? "[mask-image:linear-gradient(transparent,#000_36px,#000_calc(100%_-_36px),transparent)]" // Both
-        : "[mask-image:linear-gradient(180deg,#000_calc(100%_-_36px),transparent)]" // Bottom only
+        ? "[mask-image:linear-gradient(transparent,#000_48px,#000_calc(100%_-_48px),transparent)]" // Both
+        : "[mask-image:linear-gradient(180deg,#000_calc(100%_-_48px),transparent)]" // Bottom only
     ) : (
         topShadow
-        ? "[mask-image:linear-gradient(0deg,#000_calc(100%_-_36px),transparent)]" // Top only
+        ? "[mask-image:linear-gradient(0deg,#000_calc(100%_-_48px),transparent)]" // Top only
         : ""
     );
 

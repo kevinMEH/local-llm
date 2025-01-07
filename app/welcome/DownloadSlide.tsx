@@ -49,13 +49,13 @@ export default function DownloadSlide({ active, setActiveIndex, setLoadingCount 
                 <div className="*:h-[30rem] grid grid-cols-2 gap-8 max-w-[54rem]">
                     <div
                         className="border border-highlight rounded-xl
-                        px-4 py-3 flex flex-col gap-3 min-w-0"
+                        px-5 py-4 flex flex-col gap-3 min-w-0"
                     >
-                        <div className="flex justify-between items-center px-3">
-                            <h2 className="text-xl font-semibold text-main pt-1">Downloaded Models:</h2>
+                        <div className="flex justify-between items-center">
+                            <h2 className="text-xl font-semibold leading-none">Downloaded Models:</h2>
                             <button
                                 className="px-3 py-2
-                                rounded-md border border-highlight bg-transparet hover:bg-bg-mid
+                                rounded-md border border-highlight hover:bg-bg-mid/50
                                 transition-colors flex gap-2 items-center justify-center"
                                 onClick={refreshCache}
                             >
@@ -71,7 +71,7 @@ export default function DownloadSlide({ active, setActiveIndex, setLoadingCount 
                     </div>
                     <ModelPageDisplay cache={cache}
                         className="border border-highlight rounded-xl
-                        px-4 py-3 flex flex-col gap-3 min-w-0"
+                        px-5 py-4 flex flex-col gap-3 min-w-0"
                     />
                 </div>
             </div>
@@ -153,8 +153,8 @@ function ModelPageDisplay({ cache, className }: { cache: HFCache | undefined, cl
     const currentPageModels = (models ?? []).slice(page * itemsPerPage, (page + 1) * itemsPerPage);
 
     return <div className={className}>
-        <div className="flex justify-between items-center px-3">
-            <h2 className="text-xl font-semibold text-main pt-1">Browse Models:</h2>
+        <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold leading-none">Downloaded Models:</h2>
         </div>
         <input
             className="font-mono bg-transparent rounded-md border text-sm border-highlight px-5 py-3 outline-none placeholder:text-quiet"
@@ -166,15 +166,15 @@ function ModelPageDisplay({ cache, className }: { cache: HFCache | undefined, cl
         </ScrollHint>
         <div className="flex gap-3 justify-between">
             <button className="px-6 py-2 text-sm font-mono flex items-center gap-2
-            rounded-md border border-highlight disabled:opacity-50"
+            rounded-md border border-highlight disabled:opacity-50 enabled:hover:bg-bg-mid/50"
             disabled={page === 0} onClick={previousPage}>
                 <ArrowLeftIcon size={14} />
-                <span>Back</span>
+                <span className="pr-1">Back</span>
             </button>
             <button className="px-6 py-2 text-sm font-mono flex items-center gap-2
-            rounded-md border border-highlight disabled:opacity-50"
+            rounded-md border border-highlight disabled:opacity-50 enabled:hover:bg-bg-mid/50"
             disabled={page === pageLimit} onClick={nextPage}>
-                <span>Next</span>
+                <span className="pl-1">Next</span>
                 <ArrowRightIcon size={14} />
             </button>
         </div>

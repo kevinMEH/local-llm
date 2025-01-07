@@ -38,7 +38,7 @@ export default function Page() {
     
     const slides: SlideInformation[] = [{
         slide: WelcomeSlide,
-        title: "Welcome!",
+        title: "Get Started",
         description: "Learn all about how Local LLM works",
         icon: StarIcon
     }, {

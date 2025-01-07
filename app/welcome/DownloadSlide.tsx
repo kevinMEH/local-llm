@@ -9,6 +9,8 @@ import { DownloadedModelElement, ListedModelElement } from "./ModelElements";
 import { ConstructedSlideParameters, NextButton, Slide } from "./SlideCommons";
 
 import RefreshIcon from "@/design/icons/RefreshIcon";
+import ArrowLeftIcon from "@/design/icons/ArrowLeftIcon";
+import ArrowRightIcon from "@/design/icons/ArrowRightIcon";
 
 export default function DownloadSlide({ active, setActiveIndex, setLoadingCount }: ConstructedSlideParameters) {
     const [ cache, setCache ] = useState<HFCache>();
@@ -38,18 +40,18 @@ export default function DownloadSlide({ active, setActiveIndex, setLoadingCount 
             <h1 className="text-3xl font-semibold text-main text-center">Downloading Models</h1>
             <div className="space-y-4 pb-2 text-justify flex flex-col items-center">
                 <p className="max-w-[52rem]">
-                    Browse from a selection of trending models from the search
+                    Browse from a selection of trending models using the search
                     box below, or find your own model on <Link href="https://huggingface.co/models?pipeline_tag=text-generation&sort=trending" target="_blank">
                         Huggingface
                     </Link> and input the model name (Example: meta-llama/Llama-3.2-1B-Instruct)
                     into the search bar.
                 </p>
-                <div className="*:h-[22rem] grid grid-cols-2 gap-8 min-w-0">
+                <div className="*:h-[30rem] grid grid-cols-2 gap-8 max-w-[54rem]">
                     <div
                         className="border border-highlight rounded-xl
-                        max-w-[30rem] h-full px-4 py-3 flex flex-col min-w-0"
+                        px-4 py-3 flex flex-col gap-3 min-w-0"
                     >
-                        <div className="flex justify-between items-center pb-3 px-3">
+                        <div className="flex justify-between items-center px-3">
                             <h2 className="text-xl font-semibold text-main pt-1">Downloaded Models:</h2>
                             <button
                                 className="px-3 py-2
@@ -61,7 +63,7 @@ export default function DownloadSlide({ active, setActiveIndex, setLoadingCount 
                                 <RefreshIcon size={12} />
                             </button>
                         </div>
-                        <ScrollHint className="overflow-y-scroll hide-scrollbar">
+                        <ScrollHint className="overflow-y-scroll hide-scrollbar flex-1">
                             { cache?.repos.map(
                                 (repo, i) => <DownloadedModelElement key={i} repo={repo} />
                             ) }
@@ -69,7 +71,7 @@ export default function DownloadSlide({ active, setActiveIndex, setLoadingCount 
                     </div>
                     <ModelPageDisplay cache={cache}
                         className="border border-highlight rounded-xl
-                        max-w-[30rem] h-full px-4 py-3 flex flex-col min-w-0"
+                        px-4 py-3 flex flex-col gap-3 min-w-0"
                     />
                 </div>
             </div>
@@ -84,17 +86,18 @@ function ModelPageDisplay({ cache, className }: { cache: HFCache | undefined, cl
     const [ generator, setGenerator ] = useState<InfiniteAsyncGenerator<ModelEntry, undefined>>(listModels({
         filter: [ "text-generation" ]
     }));
-    const [ models, setModels ] = useState<ModelEntry[]>([]);
+    const [ models, setModels ] = useState<ModelEntry[] | undefined>(undefined);
     const [ page, setPage ] = useState(0);
     const [ pageLimit, setPageLimit ] = useState(Infinity);
     const [ searchText, setSearchText ] = useState("");
     const [ searchTimeout, setSearchTimeout ] = useState<number | undefined>(undefined);
+    const [ scrollToTop, setScrollToTop ] = useState(0);
     
     const itemsPerPage = 10;
     
     // We will always have current page and next page ready
     useEffect(() => {
-        if(page === 0) {
+        if(models === undefined) { // Initial fetch
             (async () => {
                 const currentBatch = await getGeneratorBatch(generator, itemsPerPage);
                 const nextBatch = await getGeneratorBatch(generator, itemsPerPage);
@@ -105,45 +108,75 @@ function ModelPageDisplay({ cache, className }: { cache: HFCache | undefined, cl
                     setPageLimit(page + 1);
                 }
             })();
-        } else {
+        } else if(models[(page + 1) * itemsPerPage] === undefined) {
             (async () => {
                 const nextBatch = await getGeneratorBatch(generator, itemsPerPage);
                 if(nextBatch.length === 0) {
                     setPageLimit(page);
                 } else {
-                    setModels(models => models.concat(nextBatch));
+                    setModels(models => (models ?? []).concat(nextBatch));
                     if(nextBatch.length < itemsPerPage) {
                         setPageLimit(page + 1);
                     }
                 }
             })();
         }
-    }, [ generator, page ]);
+    }, [generator, models, page]);
     
     function setSearch(event: ChangeEvent<HTMLInputElement>) {
         clearTimeout(searchTimeout);
         const value = event.target.value;
         setSearchText(value);
         setSearchTimeout(window.setTimeout(() => {
+            console.log("TIMEOUT ACTIVATED");
             setGenerator(listModels({
                 search: value ? value : undefined,
                 filter: [ "text-generation" ]
             }));
+            setModels(undefined);
             setPage(0);
             setPageLimit(Infinity);
-        }, 5000));
+        }, 500));
     }
     
-    const currentPageModels = models.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
+    function nextPage() {
+        setPage(page => page + 1);
+        setScrollToTop(prev => prev + 1);
+    }
+    
+    function previousPage() {
+        setPage(page => page - 1);
+        setScrollToTop(prev => prev + 1);
+    }
+    
+    const downloadedSet = cache ? new Set(cache.repos.map(repo => repo.repo_id)) : new Set();
+    const currentPageModels = (models ?? []).slice(page * itemsPerPage, (page + 1) * itemsPerPage);
 
     return <div className={className}>
-        {/* <input
+        <div className="flex justify-between items-center px-3">
+            <h2 className="text-xl font-semibold text-main pt-1">Browse Models:</h2>
+        </div>
+        <input
             className="font-mono bg-transparent rounded-md border text-sm border-highlight px-5 py-3 outline-none placeholder:text-quiet"
             value={searchText} onChange={setSearch}
             placeholder="Search for models..."
-        /> */}
-        <ScrollHint className="overflow-y-scroll hide-scrollbar">
-            { currentPageModels.map((model, i) => <ListedModelElement key={i} model={model} downloaded={i%2 === 0} /> )}
+        />
+        <ScrollHint scrollToTop={scrollToTop} className="overflow-y-scroll hide-scrollbar flex-1">
+            { currentPageModels.map((model, i) => <ListedModelElement key={i} model={model} downloaded={downloadedSet.has(model.id)} />) }
         </ScrollHint>
+        <div className="flex gap-3 justify-between">
+            <button className="px-6 py-2 text-sm font-mono flex items-center gap-2
+            rounded-md border border-highlight disabled:opacity-50"
+            disabled={page === 0} onClick={previousPage}>
+                <ArrowLeftIcon size={14} />
+                <span>Back</span>
+            </button>
+            <button className="px-6 py-2 text-sm font-mono flex items-center gap-2
+            rounded-md border border-highlight disabled:opacity-50"
+            disabled={page === pageLimit} onClick={nextPage}>
+                <span>Next</span>
+                <ArrowRightIcon size={14} />
+            </button>
+        </div>
     </div>
 }

@@ -1,40 +1,30 @@
 "use client";
 
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 
-import { getSettings } from "../api/settings";
+import type { ConstructedSlideParameters } from "./SlideCommons";
+import WelcomeSlide from "./InitialSlide";
+import HuggingfaceSlide from "./HuggingfaceSlide";
+import InstructionSlide from "./InstructionSlide";
+import DownloadSlide from "./DownloadSlide";
+import FinalSlide from "./FinalSlide";
+
 import BookOpenIcon from "@/design/icons/BookOpenIcon";
 import LinkIcon from "@/design/icons/LinkIcon";
 import ArrowLeftIcon from "@/design/icons/ArrowLeftIcon";
 import StarIcon from "@/design/icons/StarIcon";
 import SearchIcon from "@/design/icons/SearchIcon";
-
-import type { ConstructedSlideParameters } from "./SlideCommons";
-import WelcomeSlide from "./WelcomeSlide";
-import HuggingfaceSlide from "./HuggingfaceSlide";
-import InstructionSlide from "./InstructionSlide";
-import DownloadSlide from "./DownloadSlide";
+import RocketIcon from "@/design/icons/RocketIcon";
 
 export default function Page() {
-    const slideCount = 4;
+    const slideCount = 5;
     const [ loadingCount, setLoadingCount ] = useState(slideCount);
     const [ activeIndex, setActiveIndex ] = useState(0);
     const [ unloadLoadingPage, setUnloadLoadingPage ] = useState(false);
-    const router = useRouter();
     
     useEffect(() => {
         console.log(loadingCount);
     }, [loadingCount])
-    
-    useEffect(() => {
-        (async () => {
-            const settings = await getSettings();
-            if(settings.completedWelcome) {
-                router.push("/");
-            }
-        })();
-    }, [router]);
     
     const slides: SlideInformation[] = [{
         slide: WelcomeSlide,
@@ -56,13 +46,12 @@ export default function Page() {
         title: "Downloading Models",
         description: "Browse and download models for Local LLM",
         icon: SearchIcon
+    }, {
+        slide: FinalSlide,
+        title: "Welcome to Local LLM!",
+        description: "Start chatting with Local LLM now!",
+        icon: RocketIcon
     }];
-    
-    // Star
-    // Link
-    // Book open
-    // Search
-    // Rocket
 
     if(slideCount !== slides.length) {
         throw new Error("Note to developer: Please update slideCount.")
@@ -152,7 +141,7 @@ function SlideDisplay({ activeIndex, setActiveIndex, children, className }: {
     return <div className={className + " relative"}>
         { activeIndex !== 0 &&
         <button className={`absolute top-4 left-4 px-6 py-3 rounded-md
-            bg-bg-light hover:bg-bg-mid transition-colors z-10
+            bg-transparent hover:bg-bg-mid transition-colors z-10
             cursor-pointer flex gap-2 items-center text-sub`}
             onClick={() => setActiveIndex(index => index - 1)}
         >

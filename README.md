@@ -49,7 +49,7 @@ Then, install backend dependencies with Mamba:
 # IF NOT USING WINDOWS
 mamba install -y transformers accelerate flask waitress
 # IF USING WINDOWS
-mamba install -y transformers accelerate flask waitress -c pytorch
+mamba install -y transformers accelerate flask waitress -c nvidia -c pytorch
 ```
 
 Then, install frontend dependencies with npm:

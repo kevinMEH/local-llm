@@ -12,6 +12,17 @@ To install Mamba, please refer to the official documentation here:
 
 ### https://mamba.readthedocs.io/en/latest/installation/mamba-installation.html
 
+Tip: If you are using Windows, add the following path to your PATH environment
+variable: `C:\Users\Username\miniforge3\condabin`, replacing `Username` with
+your current user profile's username. If you do not know how to do this, please
+search up "windows add to path".
+
+Tip: If you are using Windows, run `mamba init`. Make sure to let the changes
+through your antivirus.
+
+Tip: To stop conda from invasively activating itself upon every startup of your
+terminal application, run `conda config --set auto_activate_base false`.
+
 We will be using Mamba to install most of our Python dependencies because pip is
 an extremely unintelligent and poorly programmed package manager that takes a
 long time to install packages.
@@ -20,27 +31,26 @@ First, create an environment and activate it using mamba:
 
 ```sh
 mamba create -n "local-llm"
+# Run activate with both mamba and conda in case mamba does not work.
 mamba activate local-llm
+conda activate local-llm
 ```
 
-Then, install Python and Node (which includes with pip and npm):
+Then, install Node if you do not have it installed:
 
 ```sh
-mamba install -y python # Installs Python and pip
-
 # If you do not have Node installed on your system, install Node below
 mamba install -y nodejs # Installs Node and npm
 ```
 
----
-
 Then, install backend dependencies with Mamba:
 
 ```sh
+# IF NOT USING WINDOWS
 mamba install -y transformers accelerate flask waitress
+# IF USING WINDOWS
+mamba install -y transformers accelerate flask waitress -c pytorch
 ```
-
----
 
 Then, install frontend dependencies with npm:
 
@@ -53,7 +63,9 @@ npm install
 First, ensure that the virtual environment for the project is activated:
 
 ```sh
+# Run activate with both mamba and conda in case mamba does not work.
 mamba activate local-llm
+conda activate local-llm
 ```
 
 Then, run

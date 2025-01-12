@@ -18,25 +18,29 @@ function spawnPromise(...args) {
     });
 }
 
+const windows = process.platform === "win32";
+const npmCommand = windows ? "npm.cmd" : "npm";
+const pythonCommand = windows ? "python.cmd" : "python";
+
 if(process.argv.includes("--dev")) {
-    spawnPromise("python", ["main.py"], {
+    spawnPromise(pythonCommand, ["main.py"], {
         stdio: "inherit"
     });
-    spawnPromise("npm", ["run", "dev"], {
+    spawnPromise(npmCommand, ["run", "dev"], {
         stdio: "inherit"
     });
 } else {
     if(false == existsSync("./.next/BUILD_ID") || process.argv.includes("--build")) {
         console.log("Compiling...");
-        await spawnPromise("npm", ["run", "build"], {
+        await spawnPromise(npmCommand, ["run", "build"], {
             stdio: "inherit"
         });
     }
     
-    spawnPromise("python", ["main.py", "--production"], {
+    spawnPromise(pythonCommand, ["main.py", "--production"], {
         stdio: "inherit"
     });
-    spawnPromise("npm", ["run", "start"], {
+    spawnPromise(npmCommand, ["run", "start"], {
         stdio: "inherit"
     });
 }

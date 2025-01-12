@@ -20,8 +20,8 @@ const config: Config = {
 
             // Text
             "main": "#E9F6EC",
-            "sub": "#A1BFA3",
-            "quiet": "#526659",
+            "sub": "#B2D1B7",
+            "quiet": "#7A9984",
             
             "link": "#06B6D4",
             "error": "#F43F5E"

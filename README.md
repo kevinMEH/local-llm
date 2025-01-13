@@ -46,7 +46,7 @@ mamba install -y nodejs # Installs Node and npm
 Then, install backend dependencies with Mamba:
 
 ```sh
-mamba install -y transformers accelerate flask waitress -c pytorch -c nvidia
+mamba install -y transformers accelerate flask waitress pytorch -c pytorch -c nvidia
 ```
 
 Then, install frontend dependencies with npm:

@@ -1,5 +1,5 @@
 import json
-from pathlib import PosixPath
+from pathlib import Path
 from queue import Empty, Full, Queue
 from threading import Thread
 from time import sleep
@@ -33,7 +33,7 @@ def serialize(object):
         return object.__dict__
     if(isinstance(object, frozenset)):
         return list(object)
-    if(isinstance(object, PosixPath)):
+    if(isinstance(object, Path)):
         return str(object)
     if(isinstance(object, CorruptedCacheException)):
         return str(object)

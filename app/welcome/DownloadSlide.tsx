@@ -8,7 +8,6 @@ import ScrollHint from "./ScrollHint";
 import { DownloadedModelElement, ListedModelElement } from "./ModelElements";
 import { ConstructedSlideParameters, NextButton, Slide } from "./SlideCommons";
 
-import RefreshIcon from "@/design/icons/RefreshIcon";
 import ArrowLeftIcon from "@/design/icons/ArrowLeftIcon";
 import ArrowRightIcon from "@/design/icons/ArrowRightIcon";
 
@@ -35,44 +34,26 @@ export default function DownloadSlide({ active, setActiveIndex, setLoadingCount 
         getCache().then(cache => setCache(cache));
     }
     
-    return <Slide className="!max-w-none" active={active}>
+    return <Slide className="!max-w-[54rem]" active={active}>
         <div className="space-y-8 text-sub">
             <h1 className="text-3xl font-semibold text-main text-center">Downloading Models</h1>
             <div className="space-y-4 pb-2 text-justify flex flex-col items-center">
-                <p className="max-w-[52rem]">
+                <p className="px-4">
                     Browse from a selection of trending models using the search
                     box below, or find your own model on <Link href="https://huggingface.co/models?pipeline_tag=text-generation&sort=trending" target="_blank">
                         Huggingface
                     </Link> and input the model name (Example: meta-llama/Llama-3.2-1B-Instruct)
                     into the search bar.
                 </p>
-                <div className="*:h-[30rem] grid grid-cols-2 gap-8 max-w-[54rem]">
+                <div className="*:h-[30rem] grid grid-cols-2 w-full *:w-full gap-8 flex-grow">
+                    <ModelDisplay cache={cache}
+                        className="border border-highlight rounded-xl px-3 py-3 min-w-0"
+                    />
                     <div
                         className="border border-highlight rounded-xl
                         px-5 py-4 flex flex-col gap-3 min-w-0"
                     >
-                        <div className="flex justify-between items-center">
-                            <h2 className="text-xl font-semibold leading-none">Downloaded Models:</h2>
-                            <button
-                                className="px-3 py-2
-                                rounded-md border border-highlight hover:bg-bg-mid/50
-                                transition-colors flex gap-2 items-center justify-center"
-                                onClick={refreshCache}
-                            >
-                                <span className="font-mono text-xs">Refresh</span>
-                                <RefreshIcon size={12} />
-                            </button>
-                        </div>
-                        <ScrollHint className="overflow-y-scroll hide-scrollbar flex-1">
-                            { cache?.repos.map(
-                                (repo, i) => <DownloadedModelElement key={i} repo={repo} />
-                            ) }
-                        </ScrollHint>
                     </div>
-                    <ModelPageDisplay cache={cache}
-                        className="border border-highlight rounded-xl
-                        px-5 py-4 flex flex-col gap-3 min-w-0"
-                    />
                 </div>
             </div>
             <div className="flex justify-center">
@@ -82,7 +63,26 @@ export default function DownloadSlide({ active, setActiveIndex, setLoadingCount 
     </Slide>
 }
 
-function ModelPageDisplay({ cache, className }: { cache: HFCache | undefined, className: string }) {
+function ModelDisplay({ cache, className }: { cache: HFCache | undefined, className: string }) {
+    const [ mode, setMode ] = useState("Browse" as "Browse" | "Downloaded");
+
+    return <div className={`flex flex-col gap-2 ${className}`}>
+        <div className="flex *:flex-1 font-mono text-sm rounded-md border border-highlight max-w-64">
+            <button
+                className={`py-2 rounded-md ${mode === "Browse" ? "bg-bg-dark" : "hover:bg-bg-dark/40"} transition-colors`}
+                onClick={() => setMode("Browse")}
+            >Browse</button>
+            <button
+                className={`py-2 rounded-md ${mode === "Downloaded" ? "bg-bg-dark" : "hover:bg-bg-dark/40"} transition-colors`}
+                onClick={() => setMode("Downloaded")}
+            >Downloaded</button>
+        </div>
+        <BrowseModels cache={cache} className={`min-h-0 ${mode === "Browse" ? "" : "hidden"}`} />
+        <DownloadedModels cache={cache} className={`${mode === "Downloaded" ? "" : "hidden"}`} />
+    </div>
+}
+
+function BrowseModels({ cache, className }: { cache: HFCache | undefined, className: string }) {
     const [ generator, setGenerator ] = useState<InfiniteAsyncGenerator<ModelEntry, undefined>>(listModels({
         filter: [ "text-generation" ]
     }));
@@ -152,12 +152,9 @@ function ModelPageDisplay({ cache, className }: { cache: HFCache | undefined, cl
     const downloadedSet = cache ? new Set(cache.repos.map(repo => repo.repo_id)) : new Set();
     const currentPageModels = (models ?? []).slice(page * itemsPerPage, (page + 1) * itemsPerPage);
 
-    return <div className={className}>
-        <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold leading-none">Downloaded Models:</h2>
-        </div>
+    return <div className={`flex flex-col gap-2 ${className}`}>
         <input
-            className="font-mono bg-transparent rounded-md border text-sm border-highlight px-5 py-3 outline-none placeholder:text-quiet"
+            className="font-mono bg-transparent rounded-md border text-sm border-highlight px-4 py-2 outline-none placeholder:text-quiet"
             value={searchText} onChange={setSearch}
             placeholder="Search for models..."
         />
@@ -179,4 +176,12 @@ function ModelPageDisplay({ cache, className }: { cache: HFCache | undefined, cl
             </button>
         </div>
     </div>
+}
+
+function DownloadedModels({ cache, className }: { cache: HFCache | undefined, className: string }) {
+    return <ScrollHint className={`overflow-y-scroll hide-scrollbar flex-1 ${className}`}>
+        { cache?.repos.map(
+            (repo, i) => <DownloadedModelElement key={i} repo={repo} />
+        ) }
+    </ScrollHint>
 }

@@ -126,7 +126,7 @@ const desiredModelInformationKeys: string[] = [
     "tags", "downloads", "likes", "siblings", "createdAt", "safetensors"
 ] satisfies (keyof ModelInformation)[];
 
-export async function modelInformation(modelId: string): Promise<ModelInformation> {
+export async function getModelInformation(modelId: string): Promise<ModelInformation | { error: string }> {
     const parameters = new URLSearchParams();
     parameters.append("blobs", "true");
     desiredModelInformationKeys.forEach(key => parameters.append("expand", key));
@@ -137,7 +137,7 @@ export async function modelInformation(modelId: string): Promise<ModelInformatio
         throw new Error("Request failed with status " + response.status);
     }
     const modelInformation = await response.json();
-    return modelInformation;
+    return modelInformation as ModelInformation | { error: string };
 }
 
 export function calculateModelSizeBytes(model: ModelInformation): number {

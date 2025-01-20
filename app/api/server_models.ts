@@ -42,3 +42,34 @@ export async function getCache(): Promise<HFCache> {
     const json = await response.json();
     return json as HFCache;
 }
+
+type PreviewDeleteRevisionsResult = {
+    expected_freed_size: number,
+    blobs: string[], // Paths, usually empty
+    refs: string[], // Paths
+    repos: string[], // Paths
+    snapshots: string[], // Paths, usually empty
+}
+
+// TODO: Make this useful
+export async function previewDeleteRevisions(revisions: string[]): Promise<PreviewDeleteRevisionsResult> {
+    const response = await fetch("http://127.0.0.1:2778/models/preview_delete_revisions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            revisions: revisions
+        })
+    });
+    const json = await response.json();
+    return json;
+}
+
+export async function deleteRevisions(revisions: string[]): Promise<void> {
+    await fetch("http://127.0.0.1:2778/models/delete_revisions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            revisions: revisions
+        })
+    });
+}

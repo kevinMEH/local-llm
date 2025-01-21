@@ -1,5 +1,7 @@
 "use server";
 
+import { createStreamableValue } from "ai/rsc";
+
 export type HFCache = {
     size_on_disk: number,
     repos: HFRepo[],
@@ -41,6 +43,39 @@ export async function getCache(): Promise<HFCache> {
     });
     const json = await response.json();
     return json as HFCache;
+}
+
+export async function downloadModel(modelId: string) {
+    const stream = createStreamableValue([] as [string, string, string][]);
+    
+    (async () => {
+        const response = await fetch("http://127.0.0.1:2778/models/download_model", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                repository: modelId
+            })
+        });
+        if(response.status !== 200 || response.body === null) {
+            console.error("Error: Model download failed for some unknown reason.");
+            stream.error("Error: Model download failed for some unknown reason.");
+            return;
+        }
+        const decoder = new TextDecoder();
+        for await(const data of (response.body as unknown as AsyncIterable<Uint8Array>)) {
+            const parts = decoder.decode(data).trim().split("\n");
+            if(parts[0] === "event: progress") {
+                const dataPart = parts.slice(1).join("\n");
+                const progressStrings = JSON.parse(dataPart.substring(6));
+                stream.update(progressStrings as [string, string, string][]);
+            } else if(parts[0] === "event: error") {
+                stream.error("An error was encountered while downloading the model.");
+            }
+        }
+        stream.done();
+    })();
+    
+    return { output: stream.value };
 }
 
 export type PreviewDeleteRevisionsResult = {

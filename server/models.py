@@ -79,11 +79,12 @@ def download_model():
 
     class PseudoFile:
         def __init__(self):
-            self.contents = ["", ""]
+            self.contents = ["", "", ""]
             progress_strings.append(self.contents)
-        def write(self, desc: str, progress: str):
+        def write(self, desc: str, progress_bar: str, other_info: str):
             self.contents[0] = desc
-            self.contents[1] = progress
+            self.contents[1] = progress_bar
+            self.contents[2] = other_info
             try: tqdm_queue.put(True, False)
             except Full: pass
     class CustomProgressBar():
@@ -94,7 +95,7 @@ def download_model():
             self.current = initial
             self.total = total
             self.desc = desc
-            self.width = 80
+            self.width = 27
             self.previous_bars = -1
             self.bar_changed()
             self.display()
@@ -117,8 +118,9 @@ def download_model():
             percentage = str(round(self.current / self.total * 100)) + "%"
             current_unit_string = self.unit_string(self.current)
             total_unit_string = self.unit_string(self.total)
-            progress_string = f"{percentage} | {bar_string} | {current_unit_string}/{total_unit_string}"
-            self.file.write(self.desc, progress_string)
+            progress_string = f"{bar_string}"
+            other_info = f"{percentage} | {current_unit_string}/{total_unit_string}"
+            self.file.write(self.desc, progress_string, other_info)
         units = [ "B", "KB", "MB", "GB" ]
         max_units_index = len(units) - 1
         units_divisor = 1000 # Worse case for user

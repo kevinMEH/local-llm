@@ -65,9 +65,15 @@ export async function downloadModel(modelId: string) {
         for await(const data of (response.body as unknown as AsyncIterable<Uint8Array>)) {
             const parts = decoder.decode(data).trim().split("\n");
             if(parts[0] === "event: progress") {
-                const dataPart = parts.slice(1).join("\n");
-                const progressStrings = JSON.parse(dataPart.substring(6));
-                stream.update(progressStrings as [string, string, string][]);
+                try {
+                    const dataPart = parts.slice(1).join("\n");
+                    const progressStrings = JSON.parse(dataPart.substring(6));
+                    stream.update(progressStrings as [string, string, string][]);
+                } catch(error) {
+                    // May not be catastrophic so just ignore
+                    console.error("An error was encountered parsing the progress of the model.");
+                    console.error(error);
+                }
             } else if(parts[0] === "event: error") {
                 stream.error("An error was encountered while downloading the model.");
             }

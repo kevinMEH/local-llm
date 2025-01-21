@@ -3,6 +3,28 @@
 Local LLM enables you to run Large Language Models (LLMs) and other AI models
 locally on your computer without requiring access to the internet.
 
+## Features
+
+### Beautiful UI
+
+![Local LLM Chat Interface](./README/chat.png)
+
+### It Actually Works
+
+![Local LLM responding to a user's question](./README/conversation.png)
+
+### Built-in Model Browser
+
+![Model browsing interface](./README/browse.png)
+
+### Built-in Model Downloader (With Progress Bars!)
+
+![Downloading a model interface](./README/downloading.png)
+
+### Built-in Downloaded Model Manager
+
+![Managing downloaded models](./README/models.png)
+
 ## Installation
 
 For the smoothest installation, you will need to install a virtual environment
@@ -78,3 +100,7 @@ node start.js --build
 ```
 
 to force local-llm to recompile the frontend and intermediate server layer.
+
+If you are new, please navigate to
+[the welcome page](http://localhost:2777/welcome) to get setup. We hope you
+enjoy using Local LLM!

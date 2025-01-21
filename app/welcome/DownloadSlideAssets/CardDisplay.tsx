@@ -81,11 +81,11 @@ function DownloadedModelInformation({ downloadedRepo, refreshCache }:
             </p>
             <h3>Last accessed:</h3>
             <p className="text-quiet min-w-0">
-                { new Date(downloadedRepo.last_accessed).toLocaleString() }
+                { new Date(downloadedRepo.last_accessed * 1000).toLocaleString() }
             </p>
             <h3>Last modified:</h3>
             <p className="text-quiet min-w-0">
-                { new Date(downloadedRepo.last_modified).toLocaleString() }
+                { new Date(downloadedRepo.last_modified * 1000).toLocaleString() }
             </p>
             <h3>Storage:</h3>
             <p className="text-quiet min-w-0">

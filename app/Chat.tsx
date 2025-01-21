@@ -135,7 +135,7 @@ export default function Chat({ activeConversation, dispatchConversations, setAct
                             placeholder="Conversation title"
                         />
                     </div>
-                    <button className="flex items-center gap-2 pl-5 pr-[1.125rem] py-3 rounded-md text-nowrap hover:bg-bg-light">
+                    <button className="flex items-center gap-2 pl-5 pr-[1.125rem] py-3 rounded-md text-nowrap font-mono tracking-tight hover:bg-bg-light">
                         <p>{ model }</p>
                         <ChevronDownIcon size={18} />
                     </button>

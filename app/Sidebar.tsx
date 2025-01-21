@@ -34,8 +34,8 @@ export default function Sidebar({ conversations, activeConversationId, setActive
             </button>)) }
         </div>
         <div className="border-t border-highlight mx-1 my-2" />
-        <div className="px-3 pt-2 pb-3 flex flex-col gap-6 tracking-wide text-sm">
-            <Link className="flex items-center gap-[1.125rem]" href={"https://github.com/kevinMEH/local-llm"} target="_blank">
+        <div className="px-3 pt-2 pb-3 flex flex-col gap-6 tracking-tight text-sm font-mono">
+            <Link className="flex items-center gap-[1.125rem] text-main" href={"https://github.com/kevinMEH/local-llm"} target="_blank">
                 <CodeIcon size={20} />
                 <p>Github</p>
             </Link>

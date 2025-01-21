@@ -95,13 +95,13 @@ function BrowseModels({ cache, setSelectedModelId, className }: { cache: HFCache
     const downloadedSet = cache ? new Set(cache.repos.map(repo => repo.repo_id)) : new Set();
     const currentPageModels = (models ?? []).slice(page * itemsPerPage, (page + 1) * itemsPerPage);
 
-    return <div className={`flex flex-col gap-2 ${className}`}>
+    return <div className={`flex flex-col gap-2 flex-1 ${className}`}>
         <input
             className="font-mono bg-transparent rounded-md border text-sm border-highlight px-4 py-2 outline-none placeholder:text-quiet"
             value={searchText} onChange={setSearch}
             placeholder="Search for models..."
         />
-        <ScrollHint scrollToTop={scrollToTop} className="overflow-y-scroll hide-scrollbar flex-1">
+        <ScrollHint scrollToTop={scrollToTop} className="overflow-y-scroll hide-scrollbar flex-1 border border-highlight rounded-md">
             { currentPageModels.map((model, i) => {
                 return <ListedModelElement
                     key={i}
@@ -129,7 +129,7 @@ function BrowseModels({ cache, setSelectedModelId, className }: { cache: HFCache
 }
 
 function DownloadedModels({ cache, setSelectedModelId, className }: { cache: HFCache | undefined, setSelectedModelId: Dispatch<SetStateAction<string | undefined>>, className: string }) {
-    return <ScrollHint className={`overflow-y-scroll hide-scrollbar flex-1 ${className}`}>
+    return <ScrollHint className={`overflow-y-scroll hide-scrollbar flex-1 border border-highlight rounded-md ${className}`}>
         { cache?.repos.map(
             (repo, i) => <DownloadedModelElement key={i} repo={repo} setSelectedModelId={setSelectedModelId} />
         ) }

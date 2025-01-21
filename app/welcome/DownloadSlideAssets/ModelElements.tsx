@@ -27,7 +27,7 @@ function ElementTemplate({ modelId, downloaded, setSelectedModelId, className = 
 
     return <div
         onClick={() => setSelectedModelId(modelId)}
-        className={`border border-highlight first:mt-0 -mt-[1px] first:rounded-t-md last:rounded-b-md
+        className={`outline outline-1 first:mt-0 mt-[1px] outline-highlight
         px-5 py-3 flex gap-5 min-w-0 cursor-pointer hover:bg-bg-dark/40 transition-colors`}
     >
         <div

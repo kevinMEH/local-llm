@@ -43,7 +43,8 @@ export async function getCache(): Promise<HFCache> {
     return json as HFCache;
 }
 
-type PreviewDeleteRevisionsResult = {
+export type PreviewDeleteRevisionsResult = {
+    revisions: string[],
     expected_freed_size: number,
     blobs: string[], // Paths, usually empty
     refs: string[], // Paths
@@ -61,6 +62,7 @@ export async function previewDeleteRevisions(revisions: string[]): Promise<Previ
         })
     });
     const json = await response.json();
+    json.revisions = [ ...revisions ];
     return json;
 }
 
